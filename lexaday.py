@@ -224,7 +224,7 @@ def generate_term_image(term):
         print(f"Image for term '{term['term']}' already exists: {filename}")
         return filename
 
-    prompt = f"Create an image that visually represents the term '{term['term']}' which means '{term['meaning']}'."
+    prompt = f"Create an image that visually represents the root word '{term['term']}' which means '{term['meaning']}'."
     generate_image_dalle(prompt, filename)
     return filename
 
