@@ -155,7 +155,7 @@ def generate_image_dalle(prompt: str, filename: str):
         json={
             "model": "dall-e-2",
             "prompt": prompt,
-            "size": "512*512",
+            "size": "512x512",
             "response_format": "url",
             "n": 1
         }
