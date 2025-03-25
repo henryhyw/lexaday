@@ -301,6 +301,7 @@ def process_for_user(user_email: str):
     else:
         example_word = new_term["term"] if new_term else "keep going"
     encouraging_sentence = query_encouraging_sentence(example_word)
+    encouraging_sentence = encouraging_sentence.replace(example_word, f"<strong>{example_word}</strong>")
     # encouraging_sentence = "Test Encouraging Sentence"
 
     # Determine which records are due for review
