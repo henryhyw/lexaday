@@ -31,6 +31,7 @@ jobs:
           SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
           RECEIVER_EMAILS: ${{ vars.RECEIVER_EMAILS }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          STABILITY_API_KEY: ${{ secrets.STABILITY_API_KEY }}
           RECORDS_LINK: ${{ secrets.RECORDS_LINK }}
         run: |
           python lexaday.py
