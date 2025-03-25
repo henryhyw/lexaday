@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Secrets & env files
+.env
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs or temp data
+*.log
+
+# Backup files
+*~
+
+# Ignore compiled files
+*.so
+*.out
+
+# Python cache
+*.egg-info/
+.eggs/
+
+# Node / frontend extras (if ever used)
+node_modules/
+
+# Ignore IDE/project files
+.vscode/
+.idea/

@@ -1,0 +1,46 @@
+name: Lexaday Update
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Daily at 00:00 UTC, which is 11am AEDT (UTC+11)
+  workflow_dispatch:
+
+jobs:
+  lexaday:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Lexaday Update
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          RECEIVER_EMAILS: ${{ secrets.RECEIVER_EMAILS }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          RECORDS_LINK: ${{ secrets.RECORDS_LINK }}
+        run: |
+          python lexaday.py
+
+      - name: Commit and push updated files (including images)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add --all
+          git commit -m "Update Lexaday data and images [skip ci]" || echo "No changes to commit"
+          git push origin HEAD:main
