@@ -1,6 +1,7 @@
 import os
 import json
 import random
+import base64
 from PIL import Image
 from io import BytesIO
 import requests
@@ -25,10 +26,6 @@ RECORDS_LINK = os.getenv("RECORDS_LINK", "N/A")
 
 # --- CONFIGURATION ---
 openai.api_key = os.getenv("OPENAI_API_KEY", openai.api_key)  # fall back if not in env
-
-# DALL·E 3 endpoint for image generation (using OpenAI API)
-DALL_E3_API_URL = "https://api.openai.com/v1/images/generations"
-OPENAI_HEADERS = {"Authorization": f"Bearer {openai.api_key}"}
 
 # Files for shared data
 RSDATA_FILENAME = "rsdata.json"  # Each item must have keys: "id", "term", "meaning", "examples"
@@ -147,34 +144,90 @@ def query_encouraging_sentence(word: str, model="gpt-4o-2024-08-06") -> str:
         print("❌ ChatGPT-4 API error (encouraging sentence):", e)
         return ""
 
-def generate_image_dalle(prompt: str, filename: str):
-    print(f"\n🎨 Generating image for prompt: {prompt[:60]}...")
-    response = requests.post(
-        DALL_E3_API_URL,
-        headers=OPENAI_HEADERS,
-        json={
-            "model": "dall-e-3",
-            "prompt": prompt,
-            "size": "1024x1024",
-            "response_format": "url",
-            "n": 1
-        }
+def query_stable_diffusion_prompt(term, model="gpt-4o-2024-08-06") -> str:
+    """
+    Generate a Stable Diffusion prompt that visually represents the root word.
+    """
+    prompt = (
+        f"Generate a prompt for Stable Diffusion that visually represents the root word '{term['term']}' "
+        f"which means '{term['meaning']}'. The prompt should be concise, clear, and include only the necessary visual details. "
+        "Respond with a JSON object exactly matching this schema: {\"sd_prompt\": string}."
     )
-    if response.status_code == 200:
-        try:
-            url = response.json()["data"][0]["url"]
-            img_response = requests.get(url)
-            if img_response.status_code == 200:
-                img = Image.open(BytesIO(img_response.content))
-                img.save(filename)
-                print(f"✅ Image saved as {filename}")
-            else:
-                print("❌ Failed to download image from URL.")
-        except Exception as e:
-            print("❌ Failed to process image response:", e)
-    else:
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=100,
+            response_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "StableDiffusionPromptResponse",
+                    "strict": True,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "sd_prompt": {"type": "string"}
+                        },
+                        "required": ["sd_prompt"],
+                        "additionalProperties": False
+                    }
+                }
+            }
+        )
+        parsed = getattr(response.choices[0].message, "parsed", None)
+        if parsed and "sd_prompt" in parsed:
+            return parsed["sd_prompt"].strip()
+        else:
+            raw_content = response.choices[0].message.content
+            parsed_json = json.loads(raw_content)
+            return parsed_json.get("sd_prompt", "").strip()
+    except Exception as e:
+        print("❌ ChatGPT-4 API error (stable diffusion prompt):", e)
+        return ""
+
+def generate_image_dalle(prompt: str, filename: str):
+    """
+    Generate an image using the Stable Diffusion API and save it to filename.
+    """
+    print(f"\n🎨 Generating image for prompt: {prompt[:60]}...")
+    engine_id = "stable-diffusion-xl-1024-v1-0"
+    api_host = os.getenv('API_HOST', 'https://api.stability.ai')
+    STABILITY_API_KEY = os.getenv("STABILITY_API_KEY")
+    if STABILITY_API_KEY is None:
+        raise Exception("Missing Stability API key.")
+    
+    response = requests.post(
+        f"{api_host}/v1/generation/{engine_id}/text-to-image",
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": f"Bearer {STABILITY_API_KEY}"
+        },
+        json={
+            "text_prompts": [
+                {
+                    "text": prompt
+                }
+            ],
+            "cfg_scale": 7,
+            "height": 1024,
+            "width": 1024,
+            "samples": 1,
+            "steps": 30,
+        },
+    )
+    
+    if response.status_code != 200:
         print("❌ Image generation failed. Response:")
         print(response.text[:500])
+        return
+
+    data = response.json()
+    for i, artifact in enumerate(data.get("artifacts", [])):
+        with open(filename, "wb") as f:
+            f.write(base64.b64decode(artifact["base64"]))
+        print(f"✅ Image saved as {filename}")
 
 # --- DATA MANAGEMENT FUNCTIONS (for shared rsdata and per-user records) ---
 def load_rsdata():
@@ -224,8 +277,12 @@ def generate_term_image(term):
         print(f"Image for term '{term['term']}' already exists: {filename}")
         return filename
 
-    prompt = f"Create an image that visually represents the root word '{term['term']}' which means '{term['meaning']}'."
-    generate_image_dalle(prompt, filename)
+    # Generate a Stable Diffusion prompt using GPT-4
+    sd_prompt = query_stable_diffusion_prompt(term)
+    if not sd_prompt:
+        # Fallback to a default prompt if GPT-4 call fails
+        sd_prompt = f"Create an image that visually represents the root word '{term['term']}' which means '{term['meaning']}'."
+    generate_image_dalle(sd_prompt, filename)
     return filename
 
 def generate_example_sentence(example_word, example_meaning, term):
@@ -354,7 +411,7 @@ def process_for_user(user_email: str):
         .image img {{
             display: block;
             width: 80%;
-            margin: 10px 10%; /* Added top margin (10px) along with left/right margins */
+            margin: 10px 10%;
             height: auto;
         }}
         .examples {{
