@@ -14,6 +14,10 @@
       [
         "anhydrous",
         "without water"
+      ],
+      [
+        "anesthetic",
+        "without feeling"
       ]
     ],
     "type": "root",
@@ -34,6 +38,10 @@
       [
         "aside",
         "on the side"
+      ],
+      [
+        "abed",
+        "in bed"
       ]
     ],
     "type": "root",
@@ -58,6 +66,10 @@
       [
         "aversion",
         "the act of turning away from"
+      ],
+      [
+        "avert",
+        "to turn away"
       ]
     ],
     "type": "root",
@@ -78,6 +90,10 @@
       [
         "admittance",
         "allowing into"
+      ],
+      [
+        "adherent",
+        "sticking to something"
       ]
     ],
     "type": "root",
@@ -118,6 +134,10 @@
       [
         "interaction",
         "communication between two or more things"
+      ],
+      [
+        "transaction",
+        "a business deal"
       ]
     ],
     "type": "root",
@@ -149,11 +169,19 @@
     "examples": [
       [
         "agriculture",
-        "management of the land, agribusiness - making money by utilizing land"
+        "management of the land"
+      ],
+      [
+        "agribusiness",
+        "making money by utilizing land"
       ],
       [
         "agrarian",
         "relating to the management of land"
+      ],
+      [
+        "agronomy",
+        "science of soil management and crop production"
       ]
     ],
     "type": "root",
@@ -174,6 +202,10 @@
       [
         "nostalgia",
         "aching for the familiar"
+      ],
+      [
+        "fibromyalgia",
+        "pain in the fibrous tissues and muscles"
       ]
     ],
     "type": "root",
@@ -214,6 +246,10 @@
       [
         "ambulance",
         "a vehicle that moves a patient"
+      ],
+      [
+        "perambulate",
+        "to walk through, about, or over"
       ]
     ],
     "type": "root",
@@ -234,6 +270,10 @@
       [
         "amorous",
         "showing romantic love"
+      ],
+      [
+        "enamored",
+        "in love with"
       ]
     ],
     "type": "root",
@@ -394,6 +434,10 @@
       [
         "antisocial",
         "opposing social norm"
+      ],
+      [
+        "antithesis",
+        "the direct opposite"
       ]
     ],
     "type": "root",
@@ -409,7 +453,11 @@
       ],
       [
         "apology",
-        "an explicit expression of regret, apostrophe - a small dash used in place of an omitted letter"
+        "an explicit expression of regret"
+      ],
+      [
+        "apostrophe",
+        "a small dash used in place of an omitted letter"
       ]
     ],
     "type": "root",
@@ -654,6 +702,10 @@
       [
         "rebel",
         "person who opposes and fights"
+      ],
+      [
+        "antebellum",
+        "before the war"
       ]
     ],
     "type": "root",
@@ -870,6 +922,10 @@
       [
         "incarnate",
         "given bodily form"
+      ],
+      [
+        "carnage",
+        "the killing of a large number of people"
       ]
     ],
     "type": "root",
@@ -881,7 +937,11 @@
     "examples": [
       [
         "cataclysm",
-        "a flood or other disaster, catalog - a complete listing"
+        "a flood or other disaster"
+      ],
+      [
+        "catalog",
+        "a complete listing of items"
       ],
       [
         "catastrophe",
@@ -1057,7 +1117,11 @@
       ],
       [
         "chromium",
-        "a blue-white metallic chemical element, chromatics - the study of color"
+        "a blue-white metallic chemical element"
+      ],
+      [
+        "chromatics",
+        "the study of color"
       ]
     ],
     "type": "root",
@@ -1073,7 +1137,11 @@
       ],
       [
         "chronological",
-        "arranging events in time order, synchronize - happening at the same time"
+        "arranging events in time order"
+      ],
+      [
+        "synchronize",
+        "to happen at the same time"
       ]
     ],
     "type": "root",
@@ -1210,6 +1278,10 @@
       [
         "recline",
         "to lean back and relax"
+      ],
+      [
+        "decline",
+        "to lean downward"
       ]
     ],
     "type": "root",
@@ -1310,6 +1382,10 @@
       [
         "convention",
         "a gathering of people with a common interest"
+      ],
+      [
+        "converge",
+        "to come together"
       ]
     ],
     "type": "root",
@@ -1437,6 +1513,10 @@
       [
         "excruciating",
         "so intense as to cause great pain or anguish"
+      ],
+      [
+        "cruciform",
+        "having the shape of a cross"
       ]
     ],
     "type": "root",
@@ -1593,6 +1673,10 @@
       [
         "epidemic",
         "spreading among people in a region"
+      ],
+      [
+        "pandemic",
+        "spreading among people in a region"
       ]
     ],
     "type": "root",
@@ -1649,6 +1733,10 @@
       [
         "dentures",
         "a set of false teeth"
+      ],
+      [
+        "orthodontist",
+        "a doctor who straightens teeth"
       ]
     ],
     "type": "root",
@@ -1709,6 +1797,10 @@
       [
         "dissect",
         "to cut apart piece by piece."
+      ],
+      [
+        "disrupt",
+        "to break apart"
       ]
     ],
     "type": "root",
@@ -1829,6 +1921,10 @@
       [
         "duo",
         "a pair normally thought of as being together."
+      ],
+      [
+        "duodecimal",
+        "relating to twelve."
       ]
     ],
     "type": "root",
@@ -1989,6 +2085,10 @@
       [
         "perennial",
         "lasting through many years."
+      ],
+      [
+        "anniversary",
+        "the yearly return of the date of some event."
       ]
     ],
     "type": "root",
@@ -2089,6 +2189,10 @@
       [
         "kinesthesia",
         "the sensation of bodily movement."
+      ],
+      [
+        "anesthesia",
+        "loss of sensation."
       ]
     ],
     "type": "root",
@@ -2109,6 +2213,10 @@
       [
         "ethnology",
         "the science of people and races."
+      ],
+      [
+        "ethnography",
+        "the scientific description of the customs of individual peoples and cultures."
       ]
     ],
     "type": "root",
@@ -2189,6 +2297,10 @@
       [
         "malefact",
         "a person who does wrong."
+      ],
+      [
+        "manufacture",
+        "to make by hand or machine."
       ]
     ],
     "type": "root",
@@ -2220,7 +2332,11 @@
     "examples": [
       [
         "confide",
-        "place trust in someone, fidelity - faithfulness"
+        "place trust in someone"
+      ],
+      [
+        "fidelity",
+        "faithfulness"
       ],
       [
         "fiduciary",
@@ -2245,6 +2361,10 @@
       [
         "flexible",
         "easily bending."
+      ],
+      [
+        "reflex",
+        "an automatic response."
       ]
     ],
     "type": "root",
@@ -2281,6 +2401,10 @@
       [
         "forgiven",
         "completely given (a release of debt)."
+      ],
+      [
+        "forlorn",
+        "completely lost."
       ]
     ],
     "type": "root",
@@ -2577,6 +2701,10 @@
       [
         "seismograph",
         "a machine noting strength and duration of earthquakes."
+      ],
+      [
+        "biography",
+        "a written account of someone's life."
       ]
     ],
     "type": "root",
@@ -2713,6 +2841,10 @@
       [
         "hemisphere",
         "one half of the earth"
+      ],
+      [
+        "hemistich",
+        "half a line of poetry."
       ],
       [
         "hemistich",
@@ -2913,6 +3045,10 @@
       [
         "hygrograph",
         "instrument for recording variations in atmospheric humidity."
+      ],
+      [
+        "hygroscope",
+        "instrument for showing the humidity of the atmosphere."
       ]
     ],
     "type": "root",
@@ -4105,6 +4241,10 @@
       [
         "monotheism",
         "belief in one god."
+      ],
+      [
+        "monopoly",
+        "control of a product or service by one company."
       ]
     ],
     "type": "root",
@@ -4336,7 +4476,11 @@
     "examples": [
       [
         "neoclassic",
-        "a revival of classic form, neocolonialism - the indirect (\"new\") economical and political control of a region by a more powerful foreign power"
+        "a revival of classic form"
+      ],
+      [
+        "neocolonialism",
+        "the indirect (\"new\") economical and political control of a region by a more powerful foreign power"
       ],
       [
         "neonatal",
@@ -4461,6 +4605,10 @@
       [
         "enunciate",
         "to speak or declare something clearly."
+      ],
+      [
+        "pronounce",
+        "to declare officially or ceremoniously."
       ]
     ],
     "type": "root",
@@ -4928,7 +5076,11 @@
     "examples": [
       [
         "pentagon",
-        "shape having 5 angles and 5 sides, pentagram - a five-pointed star formerly used as a symbolic figure in magic"
+        "shape having 5 angles and 5 sides"
+      ],
+      [
+        "pentagram",
+        "a five-pointed star formerly used as a symbolic figure in magic"
       ],
       [
         "pentathlon",
@@ -4977,6 +5129,10 @@
       [
         "perennial",
         "lasting through many years."
+      ],
+      [
+        "permeable",
+        "able to be passed through."
       ]
     ],
     "type": "root",
@@ -5353,6 +5509,10 @@
       [
         "postscript",
         "an addition to an already completed document."
+      ],
+      [
+        "postwar",
+        "after a war."
       ]
     ],
     "type": "root",
@@ -5633,6 +5793,10 @@
       [
         "radish",
         "an edible root of the mustard family."
+      ],
+      [
+        "radix",
+        "the base of a number system."
       ]
     ],
     "type": "root",
@@ -5905,6 +6069,10 @@
       [
         "omniscient",
         "knowing everything."
+      ],
+      [
+        "prescient",
+        "knowing what will happen."
       ]
     ],
     "type": "root",
@@ -6035,12 +6203,12 @@
     "meaning": "of, for, or by itself",
     "examples": [
       [
-        "self",
-        "discipline - the ability to discipline yourself"
+        "self-discipline",
+        "the ability to discipline yourself"
       ],
       [
-        "self",
-        "respect - respect for yourself"
+        "self-respect",
+        "respect for yourself"
       ]
     ],
     "type": "root",
@@ -6116,7 +6284,11 @@
     "examples": [
       [
         "sextet or sextette",
-        "a composition or group of six, sextuple - sixfold"
+        "a composition or group of six"
+      ],
+      [
+        "sextuple",
+        "sixfold"
       ],
       [
         "sexagenarian",
@@ -6205,6 +6377,10 @@
       [
         "unison",
         "as one voice."
+      ],
+      [
+        "sonar",
+        "a device that uses sound waves to navigate underwater."
       ]
     ],
     "type": "root",
@@ -6544,7 +6720,11 @@
       ],
       [
         "detention",
-        "the act or fact of detaining, tenacious- having parts or elements strongly adhering to each other"
+        "the act or fact of detaining"
+      ],
+      [
+        "tenacious",
+        "having parts or elements strongly adhering to each other"
       ]
     ],
     "type": "root",
@@ -6665,6 +6845,10 @@
       [
         "theology",
         "the study of religion, god, etc."
+      ],
+      [
+        "theocracy",
+        "government by divine power."
       ]
     ],
     "type": "root",
@@ -6788,7 +6972,7 @@
       ],
       [
         "tricycle",
-        "a 3-wheeI vehicle with pedals."
+        "a 3-wheel vehicle with pedals."
       ]
     ],
     "type": "root",
@@ -6953,6 +7137,10 @@
       [
         "proverb",
         "a short saying that expresses a well-known truth."
+      ],
+      [
+        "verbose",
+        "using too many words."
       ]
     ],
     "type": "root",
@@ -6987,8 +7175,16 @@
     "meaning": "acting in place of,next in rank",
     "examples": [
       [
-        "vice",
-        "president - the person next in rank to the president"
+        "vice president",
+        "the person next in rank to the president"
+      ],
+      [
+        "vice admiral",
+        "the person next in rank to an admiral"
+      ],
+      [
+        "vice versa",
+        "the other way around."
       ]
     ],
     "type": "root",
@@ -7091,7 +7287,11 @@
       ],
       [
         "volition",
-        "the act of making a choice or decision, voluntary - resulting from your own free will."
+        "the act of making a choice or decision"
+      ],
+      [
+        "voluntary",
+        "done on one's own wish"
       ]
     ],
     "type": "root",
