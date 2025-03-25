@@ -153,9 +153,9 @@ def generate_image_dalle(prompt: str, filename: str):
         DALL_E3_API_URL,
         headers=OPENAI_HEADERS,
         json={
-            "model": "dall-e-2",
+            "model": "dall-e-3",
             "prompt": prompt,
-            "size": "512x512",
+            "size": "1024*1024",
             "response_format": "url",
             "n": 1
         }
