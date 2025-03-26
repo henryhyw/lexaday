@@ -30,7 +30,16 @@ jobs:
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
           RECEIVER_EMAILS: ${{ vars.RECEIVER_EMAILS }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
+          HF_API_TOKEN2: ${{ secrets.HF_API_TOKEN2 }}
+          HF_API_TOKEN3: ${{ secrets.HF_API_TOKEN3 }}
+          HF_API_TOKEN4: ${{ secrets.HF_API_TOKEN4 }}
+          HF_API_TOKEN5: ${{ secrets.HF_API_TOKEN5 }}
+          HF_API_TOKEN6: ${{ secrets.HF_API_TOKEN6 }}
+          HF_API_TOKEN7: ${{ secrets.HF_API_TOKEN7 }}
+          HF_API_TOKEN8: ${{ secrets.HF_API_TOKEN8 }}
+          HF_API_TOKEN9: ${{ secrets.HF_API_TOKEN9 }}
+          HF_API_TOKEN10: ${{ secrets.HF_API_TOKEN10 }}
           STABILITY_API_KEY: ${{ secrets.STABILITY_API_KEY }}
           RECORDS_LINK: ${{ secrets.RECORDS_LINK }}
         run: |
