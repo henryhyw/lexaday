@@ -5,8 +5,6 @@ import base64
 from PIL import Image
 from io import BytesIO
 import requests
-import openai
-from openai import OpenAI
 from pydantic import BaseModel
 import smtplib
 from email.mime.text import MIMEText
@@ -14,6 +12,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 from email.utils import formataddr
 from dotenv import load_dotenv
+from huggingface_hub import InferenceClient
 
 # --- LOAD ENVIRONMENT VARIABLES ---
 load_dotenv()
@@ -23,9 +22,6 @@ SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 RECEIVER_EMAILS = os.getenv("RECEIVER_EMAILS", "").split(",")
 # (Optional) A link to online records or similar
 RECORDS_LINK = os.getenv("RECORDS_LINK", "N/A")
-
-# --- CONFIGURATION ---
-openai.api_key = os.getenv("OPENAI_API_KEY", openai.api_key)  # fall back if not in env
 
 # Files for shared data
 RSDATA_FILENAME = "rsdata.json"  # Each item must have keys: "id", "term", "meaning", "examples"
@@ -61,90 +57,73 @@ class ExampleSentenceResponse(BaseModel):
 class EncouragingSentenceResponse(BaseModel):
     encouraging_sentence: str
 
-# --- API CLIENT INITIALIZATION ---
-client = OpenAI(api_key=openai.api_key)
+# --- HELPER FUNCTION FOR HF TEXT GENERATION ---
+def hf_generate_text(prompt: str, max_tokens: int, model: str, temperature: float) -> str:
+    """
+    Tries to generate text using the HF InferenceClient with the Qwen model,
+    cycling through up to 10 tokens if needed.
+    """
+    token_keys = [
+        "HF_API_TOKEN", "HF_API_TOKEN2", "HF_API_TOKEN3", "HF_API_TOKEN4", "HF_API_TOKEN5",
+        "HF_API_TOKEN6", "HF_API_TOKEN7", "HF_API_TOKEN8", "HF_API_TOKEN9", "HF_API_TOKEN10"
+    ]
+    tokens = [os.getenv(key) for key in token_keys if os.getenv(key)]
+    if not tokens:
+        raise Exception("❌ No Hugging Face API tokens found in .env file.")
+
+    for idx, token in enumerate(tokens):
+        try:
+            client = InferenceClient(provider="nebius", api_key=token)
+            response = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            if "exceeded" in str(e) or "quota" in str(e):
+                print(f"⚠️ Token {idx + 1} quota exceeded. Trying next token...")
+            else:
+                print(f"❌ Qwen API error with token {idx + 1}: {e}")
+    return ""
 
 # --- API FUNCTIONS ---
-def query_chatgpt4_structured(prompt: str, model="gpt-4o-2024-08-06") -> str:
+def query_chatgpt4_structured(prompt: str, model="Qwen/Qwen2.5-72B-Instruct") -> str:
     """
-    Query ChatGPT-4 to generate a sample sentence (structured as JSON).
+    Query Qwen to generate a sample sentence (structured as JSON).
     """
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=60,
-            response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "ExampleSentenceResponse",
-                    "strict": True,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "sample_sentence": {"type": "string"}
-                        },
-                        "required": ["sample_sentence"],
-                        "additionalProperties": False
-                    }
-                }
-            }
-        )
-        # Access the parsed JSON from the response
-        parsed = getattr(response.choices[0].message, "parsed", None)
-        if parsed and "sample_sentence" in parsed:
-            return parsed["sample_sentence"].strip()
-        else:
-            raw_content = response.choices[0].message.content
-            parsed_json = json.loads(raw_content)
+        content = hf_generate_text(prompt, max_tokens=60, model=model, temperature=0.7)
+        try:
+            parsed_json = json.loads(content)
             return parsed_json.get("sample_sentence", "").strip()
+        except json.JSONDecodeError:
+            return content.strip()
     except Exception as e:
-        print("❌ ChatGPT-4 API error:", e)
+        print("❌ Qwen API error:", e)
         return ""
 
-def query_encouraging_sentence(word: str, model="gpt-4o-2024-08-06") -> str:
+def query_encouraging_sentence(word: str, model="Qwen/Qwen2.5-72B-Instruct") -> str:
     """
-    Generate a moderate-long encouraging sentence that includes the given word.
+    Generate a moderate long encouraging sentence that includes the given word.
     """
     prompt = (
         f"Generate a moderate long encouraging sentence of the day that includes the word '{word}'. "
         "Respond with a JSON object exactly matching this schema: {\"encouraging_sentence\": string}."
     )
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=100,
-            response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "EncouragingSentenceResponse",
-                    "strict": True,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "encouraging_sentence": {"type": "string"}
-                        },
-                        "required": ["encouraging_sentence"],
-                        "additionalProperties": False
-                    }
-                }
-            }
-        )
-        parsed = getattr(response.choices[0].message, "parsed", None)
-        if parsed and "encouraging_sentence" in parsed:
-            return parsed["encouraging_sentence"].strip()
-        else:
-            raw_content = response.choices[0].message.content
-            parsed_json = json.loads(raw_content)
+        content = hf_generate_text(prompt, max_tokens=100, model=model, temperature=0.7)
+        try:
+            parsed_json = json.loads(content)
             return parsed_json.get("encouraging_sentence", "").strip()
+        except json.JSONDecodeError:
+            return content.strip()
     except Exception as e:
-        print("❌ ChatGPT-4 API error (encouraging sentence):", e)
+        print("❌ Qwen API error (encouraging sentence):", e)
         return ""
 
-def query_stable_diffusion_prompt(term, model="gpt-4o-2024-08-06") -> str:
+def query_stable_diffusion_prompt(term, model="Qwen/Qwen2.5-72B-Instruct") -> str:
     """
     Generate a Stable Diffusion prompt that visually represents the root word.
     """
@@ -154,80 +133,68 @@ def query_stable_diffusion_prompt(term, model="gpt-4o-2024-08-06") -> str:
         "Respond with a JSON object exactly matching this schema: {\"sd_prompt\": string}."
     )
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=100,
-            response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "StableDiffusionPromptResponse",
-                    "strict": True,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "sd_prompt": {"type": "string"}
-                        },
-                        "required": ["sd_prompt"],
-                        "additionalProperties": False
-                    }
-                }
-            }
-        )
-        parsed = getattr(response.choices[0].message, "parsed", None)
-        if parsed and "sd_prompt" in parsed:
-            return parsed["sd_prompt"].strip()
-        else:
-            raw_content = response.choices[0].message.content
-            parsed_json = json.loads(raw_content)
+        content = hf_generate_text(prompt, max_tokens=100, model=model, temperature=0.7)
+        try:
+            parsed_json = json.loads(content)
             return parsed_json.get("sd_prompt", "").strip()
+        except json.JSONDecodeError:
+            return content.strip()
     except Exception as e:
-        print("❌ ChatGPT-4 API error (stable diffusion prompt):", e)
+        print("❌ Qwen API error (stable diffusion prompt):", e)
         return ""
 
 def generate_image_dalle(prompt: str, filename: str):
     """
-    Generate an image using the Stable Diffusion API and save it to filename.
+    Generate an image using the Hugging Face Inference API with Stable Diffusion.
+    Automatically switch between HF API tokens if quota is exceeded.
     """
     print(f"\n🎨 Generating image for prompt: {prompt[:60]}...")
-    engine_id = "stable-diffusion-xl-1024-v1-0"
-    api_host = os.getenv('API_HOST', 'https://api.stability.ai')
-    STABILITY_API_KEY = os.getenv("STABILITY_API_KEY")
-    if STABILITY_API_KEY is None:
-        raise Exception("Missing Stability API key.")
-    
-    response = requests.post(
-        f"{api_host}/v1/generation/{engine_id}/text-to-image",
-        headers={
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": f"Bearer {STABILITY_API_KEY}"
-        },
-        json={
-            "text_prompts": [
-                {
-                    "text": prompt
-                }
-            ],
-            "cfg_scale": 7,
-            "height": 1024,
-            "width": 1024,
-            "samples": 1,
-            "steps": 30,
-        },
-    )
-    
-    if response.status_code != 200:
-        print("❌ Image generation failed. Response:")
-        print(response.text[:500])
-        return
 
-    data = response.json()
-    for i, artifact in enumerate(data.get("artifacts", [])):
-        with open(filename, "wb") as f:
-            f.write(base64.b64decode(artifact["base64"]))
-        print(f"✅ Image saved as {filename}")
+    model_id = "stabilityai/stable-diffusion-xl-base-1.0"
+    api_url = f"https://api-inference.huggingface.co/models/{model_id}"
+
+    # Load all available tokens from environment
+    token_keys = [
+        "HF_API_TOKEN", "HF_API_TOKEN2", "HF_API_TOKEN3", "HF_API_TOKEN4", "HF_API_TOKEN5",
+        "HF_API_TOKEN6", "HF_API_TOKEN7", "HF_API_TOKEN8", "HF_API_TOKEN9", "HF_API_TOKEN10"
+    ]
+    tokens = [os.getenv(key) for key in token_keys if os.getenv(key)]
+
+    if not tokens:
+        raise Exception("❌ No Hugging Face API tokens found in .env file.")
+
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "num_inference_steps": 30,
+            "guidance_scale": 7,
+            "width": 1024,
+            "height": 1024
+        },
+        "options": {"wait_for_model": True}
+    }
+
+    for idx, token in enumerate(tokens):
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Accept": "image/png"
+        }
+        print(f"🪪 Using HF token {idx + 1}...")
+        try:
+            response = requests.post(api_url, headers=headers, json=payload)
+            if response.status_code == 200:
+                with open(filename, "wb") as f:
+                    f.write(response.content)
+                print(f"✅ Image saved as {filename}")
+                return
+            elif "exceeded your monthly included credits" in response.text:
+                print(f"⚠️ Token {idx + 1} quota exceeded. Trying next token...")
+            else:
+                print(f"❌ Error with token {idx + 1}: {response.text[:300]}")
+        except Exception as e:
+            print(f"❌ Request failed with token {idx + 1}: {e}")
+
+    print("🚫 All Hugging Face tokens exhausted or failed. Image not generated.")
 
 # --- DATA MANAGEMENT FUNCTIONS (for shared rsdata and per-user records) ---
 def load_rsdata():
@@ -277,10 +244,10 @@ def generate_term_image(term):
         print(f"Image for term '{term['term']}' already exists: {filename}")
         return filename
 
-    # Generate a Stable Diffusion prompt using GPT-4
+    # Generate a Stable Diffusion prompt using Qwen
     sd_prompt = query_stable_diffusion_prompt(term)
     if not sd_prompt:
-        # Fallback to a default prompt if GPT-4 call fails
+        # Fallback to a default prompt if Qwen call fails
         sd_prompt = f"Create an image that visually represents the root word '{term['term']}' which means '{term['meaning']}'."
     generate_image_dalle(sd_prompt, filename)
     return filename
@@ -552,7 +519,7 @@ def process_for_user(user_email: str):
     subject = "Daily Lexaday Update"
 
     # Send the email
-    send_email(subject, html_body, user_email, inline_images)
+    # send_email(subject, html_body, user_email, inline_images)
 
 # --- MAIN SCRIPT EXECUTION ---
 if __name__ == "__main__":

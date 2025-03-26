@@ -38,3 +38,5 @@ node_modules/
 # Ignore IDE/project files
 .vscode/
 .idea/
+
+lexaday_archived.py
