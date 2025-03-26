@@ -519,7 +519,7 @@ def process_for_user(user_email: str):
     subject = "Daily Lexaday Update"
 
     # Send the email
-    # send_email(subject, html_body, user_email, inline_images)
+    send_email(subject, html_body, user_email, inline_images)
 
 # --- MAIN SCRIPT EXECUTION ---
 if __name__ == "__main__":
