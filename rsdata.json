@@ -693,23 +693,30 @@
         "examples": [
             [
                 "bellicose",
-                "warlike"
+                "warlike",
+                "The bellicose nation was always preparing for conflict, believing that strength was best demonstrated through military might."
             ],
             [
                 "belligerent",
-                "hostile, ready to fight"
+                "hostile, ready to fight",
+                "The belligerent nations increased their military presence along the borders, ready to engage in conflict."
             ],
             [
                 "rebel",
-                "person who opposes and fights"
+                "person who opposes and fights",
+                "The rebel rang the bell to signal the start of the uprising."
             ],
             [
                 "antebellum",
-                "before the war"
+                "before the war",
+                ""
             ]
         ],
         "type": "root",
-        "id": 33
+        "id": 33,
+        "motivational_quotes": [
+            "In a world that can sometimes seem <strong>bellicose</strong> and unforgiving, remember that your inner peace and determination are the most powerful weapons you possess. Let them guide you to create a life of tranquility and success, one step at a time."
+        ]
     },
     {
         "term": "bene",
@@ -894,16 +901,19 @@
             [
                 "cardiac",
                 "relating to the heart",
-                "The patient underwent a cardiac examination to assess the health of their heart."
+                "The patient underwent a cardiac examination to assess the health of their heart.",
+                "The patient was diagnosed with a cardiac condition that required immediate attention."
             ],
             [
                 "cardiogenic",
                 "resulting from heart disease",
-                "The patient's cardiogenic shock was a result of severe heart failure."
+                "The patient's cardiogenic shock was a result of severe heart failure.",
+                "The patient's shortness of breath was determined to be cardiogenic, resulting from underlying heart disease."
             ],
             [
                 "cardiologist",
                 "a heart doctor",
+                "A cardiologist is a medical doctor who specializes in treating diseases of the heart and blood vessels.",
                 "A cardiologist is a medical doctor who specializes in treating diseases of the heart and blood vessels."
             ]
         ],
