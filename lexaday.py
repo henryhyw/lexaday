@@ -452,70 +452,108 @@ def process_for_user(user_id: str, user_email: str):
 """
     if new_term:
         html_body += f"""
-                <div class="card">
-                    <table style="width: 100%; background-color: #fafafa; padding: 10px; border-collapse: collapse;">
-                        <tr>
-                            <td style="width: 50%; text-align: center; font-size: 1.8em; font-weight: bold;">
-                                {new_term['term']}
-                            </td>
-                            <td style="width: auto; text-align: center;">|</td>
-                            <td style="width: 50%; text-align: center; font-size: 1.4em; color: #555;">
-                                {new_term['meaning']}
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="image">
-                        <img src="cid:{new_term['id']}_{user_id}.png" alt="{new_term['term']} image"/>
+            <div class="card">
+                <table style="width: 100%; background-color: #fafafa; padding: 10px; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 50%; text-align: center; font-size: 1.8em; font-weight: bold;">
+                            {new_term['term']}
+                        </td>
+                        <td style="width: auto; text-align: center;">|</td>
+                        <td style="width: 50%; text-align: center; font-size: 1.4em; color: #555;">
+                            {new_term['meaning']}
+                        </td>
+                    </tr>
+                </table>
+                <div class="image">
+                    <img src="cid:{new_term['id']}_{user_id}.png" alt="{new_term['term']} image"/>
+                </div>
+                <hr/>
+                <div class="examples">
+                    <h3>Examples</h3>
+        """
+        examples = new_term.get("examples", [])
+        for i, ex in enumerate(examples):
+            ex_word = ex[0]
+            ex_meaning = ex[1]
+            sample_sentence = ex[-1] if len(ex) > 2 else ""
+            html_body += f"""
+                    <div class="example">
+                        <p><strong>{ex_word}:</strong> {ex_meaning}</p>
+                        <p>{sample_sentence}</p>
                     </div>
-                    <hr/>
-                    <div class="examples">
-                        <h3>Examples</h3>
             """
-        # [Code to loop through and add example entries goes here]
+            if i != len(examples) - 1:
+                html_body += "<hr/>"
         html_body += f"""
-                    </div>
-                    <div style="text-align: right; color: #555; font-size: 0.9em; margin-top: 10px;">
-                        <a href="term.html?id={new_term['id']}" style="color: #555; text-decoration: none;">See more images, quotes, and sample sentences →</a>
+                </div>
+                    <div style="text-align: left; color: #555; font-size: 0.9em; margin-top: 10px;">
+                        <a href="https://www.henryw.me/lexaday/term.html?id={new_term['id']}" style="color: #555; text-decoration: none;">See more images and examples</a>
                     </div>
                 </div>
         """
+        html_body += """
+                </div>
+            </div>
+        """
     if due_records:
         html_body += """
-                <div class="review-section">
-                    <h2 style="text-align: center;">Let's Revisit These</h2>
+            <div class="review-section">
+                <h2 style="text-align: center;">Let's Revisit These</h2>
         """
         for rec in due_records:
             term_obj = get_term_by_id(rsdata, rec["id"])
             if term_obj:
                 html_body += f"""
-                    <div class="card">
-                        <table style="width: 100%; background-color: #fafafa; padding: 10px; border-collapse: collapse;">
-                            <tr>
-                                <td style="width: 50%; text-align: center; font-size: 1.8em; font-weight: bold;">
-                                    {term_obj['term']}
-                                </td>
-                                <td style="width: auto; text-align: center;">|</td>
-                                <td style="width: 50%; text-align: center; font-size: 1.4em; color: #555;">
-                                    {term_obj['meaning']}
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="image">
-                            <img src="cid:{term_obj['id']}_{user_id}.png" alt="{term_obj['term']} image"/>
-                        </div>
-                        <hr/>
-                        <div class="examples">
-                            <h3>Examples</h3>
+                <div class="card">
+                    <table style="width: 100%; background-color: #fafafa; padding: 10px; border-collapse: collapse;">
+                        <tr>
+                            <td style="width: 50%; text-align: center; font-size: 1.8em; font-weight: bold;">
+                                {term_obj['term']}
+                            </td>
+                            <td style="width: auto; text-align: center;">|</td>
+                            <td style="width: 50%; text-align: center; font-size: 1.4em; color: #555;">
+                                {term_obj['meaning']}
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="image">
+                        <img src="cid:{term_obj['id']}_{user_id}.png" alt="{term_obj['term']} image"/>
+                    </div>
+                    <hr/>
+                    <div class="examples">
+                        <h3>Examples</h3>
                 """
-                # [Code to loop through and add example entries for review terms goes here]
+                examples = term_obj.get("examples", [])
+                for i, ex in enumerate(examples):
+                    ex_word = ex[0]
+                    ex_meaning = ex[1]
+                    sample_sentence = ex[-1] if len(ex) > 2 else ""
+                    html_body += f"""
+                        <div class="example">
+                            <p><strong>{ex_word}:</strong> {ex_meaning}</p>
+                            <p>{sample_sentence}</p>
+                        </div>
+                    """
+                    if i != len(examples) - 1:
+                        html_body += "<hr/>"
                 html_body += f"""
                         </div>
-                        <div style="text-align: right; color: #555; font-size: 0.9em; margin-top: 10px;">
-                            <a href="term.html?id={term_obj['id']}" style="color: #555; text-decoration: none;">See more images, quotes, and sample sentences →</a>
+                        <div style="text-align: left; color: #555; font-size: 0.9em; margin-top: 10px;">
+                            <a href="https://www.henryw.me/lexaday/term.html?id={term_obj['id']}" style="color: #555; text-decoration: none;">See more images and examples</a>
                         </div>
                     </div>
                 """
+                html_body += """
+                    </div>
+                </div>
+                """
         html_body += "</div>"
+        
+    html_body += """
+            </div>
+        </body>
+        </html>
+        """
 
     inline_images = []
     if new_term and new_term_image_path and os.path.exists(new_term_image_path):
