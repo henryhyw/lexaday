@@ -128,8 +128,8 @@ def query_stable_diffusion_prompt(term, model="Qwen/Qwen2.5-72B-Instruct") -> st
     Generate a Stable Diffusion prompt that visually represents the root word.
     """
     prompt = (
-        f"Generate a prompt for Stable Diffusion that visually represents the root word '{term['term']}' "
-        f"which means '{term['meaning']}'. The prompt should be concise, clear, and include only the necessary visual details. "
+        f"Generate a prompt for Stable Diffusion that visually represents the concept: '{term['meaning']}'. "
+        "The prompt should be concise, clear, and include only the necessary visual details. "
         "Respond with a JSON object exactly matching this schema: {\"sd_prompt\": string}."
     )
     try:
