@@ -6,9 +6,9 @@
   <title>Term Gallery</title>
   <style>
     :root {
-      --gallery-width: 900px;
-      --gap: 10px;
-      --edge-margin: 20px;
+      --gallery-width: 100%;
+      --gap: 15px;
+      --edge-margin: 15px;
       --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     body {
@@ -27,7 +27,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     h1, h2, h3 {
-      text-align: center;
+      text-align: left;
     }
     .term-info {
       margin-bottom: 30px;
@@ -198,10 +198,12 @@
 
         term.motivational_quotes.forEach(quote => {
           const p = document.createElement('p');
-          p.textContent = quote;
+          // Use innerHTML so that any HTML tags (like <strong>) are rendered properly.
+          p.innerHTML = quote;
           mqDiv.appendChild(p);
         });
       }
+
 
       // 2. Examples: randomize order, and also randomize sample sentences
       const exDiv = document.getElementById('examples');
