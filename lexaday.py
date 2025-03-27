@@ -244,18 +244,37 @@ def get_term_by_id(rsdata, term_id):
             return term
     return None
 
-# --- IMAGE & SAMPLE SENTENCE FUNCTIONS ---
+# --- NEW HELPER FUNCTION: Update imagesIndex.json ---
+def update_images_index(image_filename: str):
+    """Append the image filename to imagesIndex.json if it's not already present."""
+    index_filename = "imagesIndex.json"
+    images_list = []
+    if os.path.exists(index_filename):
+        with open(index_filename, "r", encoding="utf-8") as f:
+            try:
+                images_list = json.load(f)
+            except json.JSONDecodeError:
+                images_list = []
+    if image_filename not in images_list:
+        images_list.append(image_filename)
+        with open(index_filename, "w", encoding="utf-8") as f:
+            json.dump(images_list, f, indent=4, ensure_ascii=False)
+
+# --- UPDATED generate_term_image FUNCTION ---
 def generate_term_image(term, user_id):
     os.makedirs(IMAGES_FOLDER, exist_ok=True)
     filename = os.path.join(IMAGES_FOLDER, f"{term['id']}_{user_id}.png")
+    # If the image exists, update the index and return it
     if os.path.exists(filename):
         print(f"Image for term '{term['term']}' already exists for user {user_id}: {filename}")
+        update_images_index(os.path.basename(filename))
         return filename
 
     sd_prompt = query_stable_diffusion_prompt(term)
     if not sd_prompt:
         sd_prompt = f"Create an image that visually represents the root word '{term['term']}' which means '{term['meaning']}'."
     generate_image_dalle(sd_prompt, filename)
+    update_images_index(os.path.basename(filename))
     return filename
 
 def generate_example_sentence(example_word, example_meaning, term):

@@ -26,7 +26,7 @@
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    h1, h2 {
+    h1, h2, h3 {
       text-align: center;
     }
     .term-info {
@@ -85,10 +85,16 @@
   <div class="container">
     <div class="term-info">
       <h1 id="term-title"></h1>
-      <p id="term-meaning"></p>
+      
+      <div id="meaning-section" class="section">
+        <h3>Meaning</h3>
+        <p id="term-meaning"></p>
+      </div>
+
       <div id="motivational-quotes" class="section"></div>
       <div id="examples" class="section"></div>
     </div>
+
     <div class="section">
       <h2>Image Gallery</h2>
       <div id="gallery"></div>
@@ -96,59 +102,72 @@
   </div>
 
   <script>
-    // Utility: Get query parameter by name (e.g. ?id=103).
+    // ----------------------
+    // Utility functions
+    // ----------------------
+
+    // Get query parameter by name (e.g. ?id=103).
     function getQueryParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
 
-    // Group images into rows based on the following rules:
-    // - If there is one image: one row.
+    // Fisher-Yates shuffle (in-place) for arrays
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Group images into rows based on your rules:
+    // - If there is 1 image: single row
     // - If ≥2 images:
-    //   - If total mod 3 == 0: rows of 3.
-    //   - If remainder == 1: use (n-4) images in rows of 3, then last two rows with 2 images each.
-    //   - If remainder == 2: use (n-2) images in rows of 3, then one row with 2 images.
+    //   - If total % 3 == 0 -> rows of 3
+    //   - If remainder == 1 -> (n-4) images in rows of 3, then last two rows with 2 images each
+    //   - If remainder == 2 -> (n-2) images in rows of 3, then last row with 2 images
     function groupImages(images) {
       const n = images.length;
       const rows = [];
-      if(n === 1) {
+      if (n === 1) {
         rows.push(images);
-      } else if(n >= 2) {
-        if(n % 3 === 0) {
-          for(let i = 0; i < n; i += 3) {
-            rows.push(images.slice(i, i+3));
+      } else if (n >= 2) {
+        if (n % 3 === 0) {
+          for (let i = 0; i < n; i += 3) {
+            rows.push(images.slice(i, i + 3));
           }
-        } else if(n % 3 === 1) {
+        } else if (n % 3 === 1) {
           const groupCount = n - 4;
-          for(let i = 0; i < groupCount; i += 3) {
-            rows.push(images.slice(i, i+3));
+          for (let i = 0; i < groupCount; i += 3) {
+            rows.push(images.slice(i, i + 3));
           }
-          rows.push(images.slice(groupCount, groupCount+2));
-          rows.push(images.slice(groupCount+2, groupCount+4));
-        } else if(n % 3 === 2) {
+          rows.push(images.slice(groupCount, groupCount + 2));
+          rows.push(images.slice(groupCount + 2, groupCount + 4));
+        } else if (n % 3 === 2) {
           const groupCount = n - 2;
-          for(let i = 0; i < groupCount; i += 3) {
-            rows.push(images.slice(i, i+3));
+          for (let i = 0; i < groupCount; i += 3) {
+            rows.push(images.slice(i, i + 3));
           }
-          rows.push(images.slice(groupCount, groupCount+2));
+          rows.push(images.slice(groupCount, groupCount + 2));
         }
       }
       return rows;
     }
 
-    // Build the gallery HTML.
+    // Build the gallery HTML from an array of image URLs.
     function buildGallery(imageUrls) {
       const gallery = document.getElementById('gallery');
-      gallery.innerHTML = ''; // clear existing
+      gallery.innerHTML = ''; // Clear existing
       const rows = groupImages(imageUrls);
       rows.forEach(rowImages => {
         const rowDiv = document.createElement('div');
         rowDiv.classList.add('gallery-row');
-        if(rowImages.length === 3) {
+        if (rowImages.length === 3) {
           rowDiv.classList.add('row-3');
-        } else if(rowImages.length === 2) {
+        } else if (rowImages.length === 2) {
           rowDiv.classList.add('row-2');
-        } else if(rowImages.length === 1) {
+        } else if (rowImages.length === 1) {
           rowDiv.classList.add('row-1');
         }
         rowImages.forEach(src => {
@@ -161,15 +180,18 @@
       });
     }
 
-    // Display the chosen term’s info in the HTML.
-    function displayTerm(term) {
+    // Display the chosen term’s info in the HTML, randomizing quotes/examples/sentences
+    function displayTerm(term, imagesForTerm) {
       document.getElementById('term-title').textContent = term.term || "";
       document.getElementById('term-meaning').textContent = term.meaning || "";
 
-      // Display motivational quotes.
+      // 1. Motivational quotes: randomize order
       const mqDiv = document.getElementById('motivational-quotes');
       mqDiv.innerHTML = "";
-      if(term.motivational_quotes && term.motivational_quotes.length > 0) {
+      if (term.motivational_quotes && term.motivational_quotes.length > 0) {
+        // Shuffle the quotes
+        shuffleArray(term.motivational_quotes);
+
         const mqHeader = document.createElement('h3');
         mqHeader.textContent = "Motivational Quotes";
         mqDiv.appendChild(mqHeader);
@@ -181,59 +203,72 @@
         });
       }
 
-      // Display examples with sample sentences.
+      // 2. Examples: randomize order, and also randomize sample sentences
       const exDiv = document.getElementById('examples');
       exDiv.innerHTML = "";
-      if(term.examples && term.examples.length > 0) {
+      if (term.examples && term.examples.length > 0) {
+        // Shuffle the examples themselves
+        shuffleArray(term.examples);
+
         const exHeader = document.createElement('h3');
         exHeader.textContent = "Examples";
         exDiv.appendChild(exHeader);
 
         term.examples.forEach(example => {
-          // Each example: [word, meaning, sample sentence 1, sample sentence 2, ...]
+          // Each example: [word, meaning, sampleSentence1, sampleSentence2, ...]
+          // We'll shuffle only the sample sentences, not the first two items.
           const exContainer = document.createElement('div');
           exContainer.classList.add('example');
+
+          // word, meaning
           const wordEl = document.createElement('strong');
           wordEl.textContent = example[0] + ": ";
           const meaningEl = document.createElement('span');
           meaningEl.textContent = example[1];
+
+          // sample sentences
+          const sampleSentences = example.slice(2); // everything after the first 2
+          shuffleArray(sampleSentences);
+
           const sentenceList = document.createElement('ul');
-          for(let i = 2; i < example.length; i++){
+          sampleSentences.forEach(s => {
             const li = document.createElement('li');
-            li.textContent = example[i];
+            li.textContent = s;
             sentenceList.appendChild(li);
-          }
+          });
+
           exContainer.appendChild(wordEl);
           exContainer.appendChild(meaningEl);
-          if(sentenceList.children.length > 0){
+          if (sentenceList.children.length > 0) {
             exContainer.appendChild(sentenceList);
           }
           exDiv.appendChild(exContainer);
         });
       }
 
-      // Build gallery using the term's images.
-      const galleryDiv = document.getElementById('gallery');
-      if(term.images && term.images.length > 0) {
-        buildGallery(term.images);
+      // 3. Images: randomize order
+      if (imagesForTerm && imagesForTerm.length > 0) {
+        shuffleArray(imagesForTerm);
+        buildGallery(imagesForTerm);
       } else {
-        galleryDiv.textContent = "No images available.";
+        document.getElementById('gallery').textContent = "No images available.";
       }
     }
 
-    // Main: fetch rsdata.json, get the term id from the query string, and display that term.
+    // Main: fetch rsdata.json, imagesIndex.json, get the term id from the query string,
+    // then display that term with random ordering and images from the images folder.
     (async function(){
       const termId = getQueryParam("id");
-      if(!termId) {
+      if (!termId) {
         alert("No term id specified in the URL. Use ?id=xxx");
         return;
       }
 
-      // Load rsdata.json
+      // 1. Load rsdata.json
       let rsdata = [];
       try {
         const response = await fetch('rsdata.json');
-        if(!response.ok) {
+        if (!response.ok) {
           throw new Error("Network response was not ok " + response.statusText);
         }
         rsdata = await response.json();
@@ -242,15 +277,35 @@
         return;
       }
 
-      // Find the requested term
+      // 2. Load imagesIndex.json (the file listing all images in the images folder)
+      let imagesIndex = [];
+      try {
+        const resp = await fetch('imagesIndex.json');
+        if (!resp.ok) {
+          throw new Error("Network response was not ok " + resp.statusText);
+        }
+        imagesIndex = await resp.json(); // an array of filenames, e.g. ["238_72831429.png", ...]
+      } catch (error) {
+        console.warn("Could not load imagesIndex.json. No images will be displayed.\n" + error);
+      }
+
+      // 3. Find the requested term
       const term = rsdata.find(t => String(t.id) === String(termId));
-      if(!term) {
+      if (!term) {
         alert("Term not found in rsdata.json for id=" + termId);
         return;
       }
 
-      // Display the term
-      displayTerm(term);
+      // 4. Filter images that match <termId>_... e.g. "238_72831429.png"
+      let imagesForTerm = [];
+      if (imagesIndex && imagesIndex.length > 0) {
+        imagesForTerm = imagesIndex
+          .filter(filename => filename.startsWith(termId + "_"))
+          .map(fn => "images/" + fn);  // prepend the folder path if needed
+      }
+
+      // 5. Display the term (with random order for quotes, examples, sentences, images)
+      displayTerm(term, imagesForTerm);
     })();
   </script>
 </body>
