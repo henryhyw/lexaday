@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Term Gallery</title>
+  <style>
+    :root {
+      --gallery-width: 900px;
+      --gap: 10px;
+      --edge-margin: 20px;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: var(--font-family);
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .term-info {
+      margin-bottom: 30px;
+    }
+    .term-info p {
+      margin: 0.5em 0;
+    }
+    .section {
+      margin-top: 30px;
+    }
+    /* Gallery container: fixed width so that every row’s total width is the same */
+    #gallery {
+      width: var(--gallery-width);
+      margin: 0 auto;
+      padding: 0 var(--edge-margin);
+      box-sizing: border-box;
+    }
+    .gallery-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--gap);
+    }
+    .gallery-row img {
+      object-fit: cover;
+      display: block;
+      height: auto;
+    }
+    /* Row with three images */
+    .row-3 img {
+      width: calc((var(--gallery-width) - (2 * var(--gap))) / 3);
+    }
+    /* Row with two images */
+    .row-2 img {
+      width: calc((var(--gallery-width) - (1 * var(--gap))) / 2);
+    }
+    /* Single image row (centered) */
+    .row-1 {
+      justify-content: center;
+    }
+    .row-1 img {
+      width: 100%; /* or any preferred max-width */
+      max-width: calc(var(--gallery-width));
+    }
+    /* A little spacing between example entries */
+    .example {
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+    .example:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="term-info">
+      <h1 id="term-title"></h1>
+      <p id="term-meaning"></p>
+      <div id="motivational-quotes" class="section"></div>
+      <div id="examples" class="section"></div>
+    </div>
+    <div class="section">
+      <h2>Image Gallery</h2>
+      <div id="gallery"></div>
+    </div>
+  </div>
+
+  <script>
+    // For demonstration, we embed term data as an array.
+    // In practice, you could fetch this data from a server or embed all rsdata.
+    const terms = [
+      {
+        "id": "103",
+        "term": "en, in",
+        "meaning": "inside, inwards",
+        "examples": [
+          ["envision", "to picture in the mind", "I always envision a bright future when I face challenges."],
+          ["enclose", "lock inside", "She decided to enclose the letter in a sealed envelope."],
+          ["inwards", "towards the inside", "The design draws your eyes inwards towards the central artwork."]
+        ],
+        "motivational_quotes": [
+          "Believe in your inner strength and let it shine.",
+          "Every challenge is an opportunity to go inwards and grow."
+        ],
+        // Array of image URLs – these should point to your generated images.
+        // For example, these names follow the pattern: termID_userID.png.
+        "images": [
+          "images/103_72831429.png",
+          "images/103_14589037.png",
+          "images/103_60247318.png",
+          "images/103_81926455.png",
+          "images/103_11111111.png",
+          "images/103_22222222.png",
+          "images/103_33333333.png",
+          "images/103_44444444.png",
+          "images/103_55555555.png",
+          "images/103_66666666.png",
+          "images/103_77777777.png",
+          "images/103_88888888.png",
+          "images/103_99999999.png",
+          "images/103_00000000.png"
+        ]
+      }
+      // ... you can add more terms if needed
+    ];
+
+    // Utility: Get query parameter by name.
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // Group images into rows based on the following rules:
+    // If there is one image: one row.
+    // If ≥2 images:
+    //  - If total mod 3 == 0: rows of 3.
+    //  - If remainder == 1: use (n-4) images in rows of 3, then last two rows with 2 images each.
+    //  - If remainder == 2: use (n-2) images in rows of 3, then one row with 2 images.
+    function groupImages(images) {
+      const n = images.length;
+      const rows = [];
+      if(n === 1) {
+        rows.push(images);
+      } else if(n >= 2) {
+        if(n % 3 === 0) {
+          for(let i = 0; i < n; i += 3) {
+            rows.push(images.slice(i, i+3));
+          }
+        } else if(n % 3 === 1) {
+          const groupCount = n - 4;
+          for(let i = 0; i < groupCount; i += 3) {
+            rows.push(images.slice(i, i+3));
+          }
+          rows.push(images.slice(groupCount, groupCount+2));
+          rows.push(images.slice(groupCount+2, groupCount+4));
+        } else if(n % 3 === 2) {
+          const groupCount = n - 2;
+          for(let i = 0; i < groupCount; i += 3) {
+            rows.push(images.slice(i, i+3));
+          }
+          rows.push(images.slice(groupCount, groupCount+2));
+        }
+      }
+      return rows;
+    }
+
+    // Build the gallery HTML.
+    function buildGallery(imageUrls) {
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = ''; // clear existing
+      const rows = groupImages(imageUrls);
+      rows.forEach(rowImages => {
+        const rowDiv = document.createElement('div');
+        rowDiv.classList.add('gallery-row');
+        if(rowImages.length === 3) {
+          rowDiv.classList.add('row-3');
+        } else if(rowImages.length === 2) {
+          rowDiv.classList.add('row-2');
+        } else if(rowImages.length === 1) {
+          rowDiv.classList.add('row-1');
+        }
+        rowImages.forEach(src => {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = "Term Image";
+          rowDiv.appendChild(img);
+        });
+        gallery.appendChild(rowDiv);
+      });
+    }
+
+    // Populate the term information.
+    function displayTerm(term) {
+      document.getElementById('term-title').textContent = term.term;
+      document.getElementById('term-meaning').textContent = term.meaning;
+
+      // Display motivational quotes.
+      const mqDiv = document.getElementById('motivational-quotes');
+      mqDiv.innerHTML = "<h3>Motivational Quotes</h3>";
+      term.motivational_quotes.forEach(quote => {
+        const p = document.createElement('p');
+        p.textContent = quote;
+        mqDiv.appendChild(p);
+      });
+
+      // Display examples with sample sentences.
+      const exDiv = document.getElementById('examples');
+      exDiv.innerHTML = "<h3>Examples</h3>";
+      term.examples.forEach(example => {
+        // Each example: [word, meaning, sample sentence 1, sample sentence 2, ...]
+        const exContainer = document.createElement('div');
+        exContainer.classList.add('example');
+        const wordEl = document.createElement('strong');
+        wordEl.textContent = example[0] + ": ";
+        const meaningEl = document.createElement('span');
+        meaningEl.textContent = example[1];
+        const sentenceList = document.createElement('ul');
+        for(let i = 2; i < example.length; i++){
+          const li = document.createElement('li');
+          li.textContent = example[i];
+          sentenceList.appendChild(li);
+        }
+        exContainer.appendChild(wordEl);
+        exContainer.appendChild(meaningEl);
+        if(sentenceList.children.length > 0){
+          exContainer.appendChild(sentenceList);
+        }
+        exDiv.appendChild(exContainer);
+      });
+
+      // Build gallery using the term's images.
+      if(term.images && term.images.length > 0) {
+        buildGallery(term.images);
+      } else {
+        document.getElementById('gallery').textContent = "No images available.";
+      }
+    }
+
+    // Main: get the term id from the query string, find term and display.
+    (function(){
+      const termId = getQueryParam("id");
+      if(!termId) {
+        alert("No term id specified in the URL.");
+        return;
+      }
+      const term = terms.find(t => t.id === termId);
+      if(!term) {
+        alert("Term not found.");
+        return;
+      }
+      displayTerm(term);
+    })();
+  </script>
+</body>
+</html>
