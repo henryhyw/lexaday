@@ -694,22 +694,26 @@
             [
                 "bellicose",
                 "warlike",
-                "The bellicose nation was always preparing for conflict, believing that strength was best demonstrated through military might."
+                "The bellicose nation was always preparing for conflict, believing that strength was best demonstrated through military might.",
+                "The bellicose nation was always on the brink of war with its neighbors."
             ],
             [
                 "belligerent",
                 "hostile, ready to fight",
-                "The belligerent nations increased their military presence along the borders, ready to engage in conflict."
+                "The belligerent nations increased their military presence along the borders, ready to engage in conflict.",
+                "The belligerent nation was poised to attack its neighbor, increasing tensions in the region."
             ],
             [
                 "rebel",
                 "person who opposes and fights",
+                "The rebel rang the bell to signal the start of the uprising.",
                 "The rebel rang the bell to signal the start of the uprising."
             ],
             [
                 "antebellum",
                 "before the war",
-                ""
+                "",
+                "The antebellum period in American history refers to the time before the Civil War."
             ]
         ],
         "type": "root",
@@ -4826,19 +4830,22 @@
                 "optimal",
                 "the best, the most desirable",
                 "The optimal solution for reducing energy consumption is to use more efficient appliances.",
-                "The optimal solution ensures the best outcome with the least amount of resources."
+                "The optimal solution ensures the best outcome with the least amount of resources.",
+                "The optimal solution for reducing energy consumption is to use LED lighting."
             ],
             [
                 "optimize",
                 "to make the best of",
                 "To optimize your study schedule, allocate time based on the difficulty and importance of each subject.",
-                "To optimize your website's performance, ensure it loads quickly and is mobile-friendly."
+                "To optimize your website's performance, ensure it loads quickly and is mobile-friendly.",
+                "To optimize your study schedule, allocate specific times for each subject to ensure balanced preparation."
             ],
             [
                 "optimum",
                 "the best something could be.",
                 "The optimum temperature for brewing coffee is between 92°C and 96°C.",
-                "The optimum solution ensures the best outcome for all parties involved."
+                "The optimum solution ensures the best outcome for all parties involved.",
+                "The optimum solution for reducing energy consumption is to use LED lights."
             ]
         ],
         "type": "root",
@@ -6317,19 +6324,25 @@
         "examples": [
             [
                 "sextet",
-                "a composition or group of six"
+                "a composition or group of six",
+                "The band played a lively sextet, showcasing the talents of six musicians."
             ],
             [
                 "sextuple",
-                "sixfold"
+                "sixfold",
+                "The company's profits have sextupled over the past six years."
             ],
             [
                 "sexagenarian",
-                "person in his/her sixties."
+                "person in his/her sixties.",
+                "The sexagenarian enjoyed the peacefulness of the morning walk, reflecting on a life well-lived."
             ]
         ],
         "type": "root",
-        "id": 312
+        "id": 312,
+        "motivational_quotes": [
+            "Just like in a <strong>sextet</strong> where each musician plays a crucial part to create a harmonious melody, every effort you make in life contributes to the symphony of your success. Keep playing your part with passion and precision."
+        ]
     },
     {
         "term": "sol",
