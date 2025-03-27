@@ -82,22 +82,26 @@
             [
                 "accelerate",
                 "to increase the speed of",
-                "To accelerate the process, we will streamline our workflows."
+                "To accelerate the process, we will streamline our workflows.",
+                "The driver pressed the accelerator to increase the speed of the car, often abbreviated as a/c/d in some vehicle manuals."
             ],
             [
                 "accessible",
                 "easily entered, approached, or obtained",
-                "The building is accessible to everyone, including those with disabilities, through its wide entrance and elevator."
+                "The building is accessible to everyone, including those with disabilities, through its wide entrance and elevator.",
+                "The information in the database is accessible through a simple user interface."
             ],
             [
                 "admittance",
                 "allowing into",
-                "The school granted her admittance into the advanced program."
+                "The school granted her admittance into the advanced program.",
+                "The school granted admittance to 500 new students this year."
             ],
             [
                 "adherent",
                 "sticking to something",
-                "The adherent material ensured that the a/c/d components remained securely in place."
+                "The adherent material ensured that the a/c/d components remained securely in place.",
+                "The adherent material ensured that the a/c/d components remained securely in place during operation."
             ]
         ],
         "type": "root",
@@ -132,23 +136,30 @@
         "examples": [
             [
                 "activity",
-                "something that a person does"
+                "something that a person does",
+                "Running is a healthy activity that many people enjoy."
             ],
             [
                 "react",
-                "to do something in response"
+                "to do something in response",
+                "She reacted quickly to the sound of the alarm by waking up and checking her phone."
             ],
             [
                 "interaction",
-                "communication between two or more things"
+                "communication between two or more things",
+                "The interaction between the actors on stage brought the play to life."
             ],
             [
                 "transaction",
-                "a business deal"
+                "a business deal",
+                "The act of buying a house is a significant transaction for most people."
             ]
         ],
         "type": "root",
-        "id": 6
+        "id": 6,
+        "motivational_quotes": [
+            "Engage in the <strong>activity</strong> you love most, for it is through our passions that we find the strength to overcome life's challenges and achieve greatness."
+        ]
     },
     {
         "term": "aer/o",
@@ -3134,19 +3145,25 @@
         "examples": [
             [
                 "geriatrics",
-                "medical care of the elderly"
+                "medical care of the elderly",
+                "Geriatrics focuses on the health care needs of older adults."
             ],
             [
                 "pediatrician",
-                "a doctor who treats children"
+                "a doctor who treats children",
+                "A pediatrician is a medical doctor who specializes in the care and treatment of children."
             ],
             [
                 "podiatry",
-                "medical care for feet."
+                "medical care for feet.",
+                "Podiatry focuses on the diagnosis and treatment of foot-related medical issues."
             ]
         ],
         "type": "root",
-        "id": 152
+        "id": 152,
+        "motivational_quotes": [
+            "In the field of <strong>geriatrics</strong>, we learn that every chapter of life has its own unique value and purpose. Just as the twilight years can be filled with wisdom and grace, so too can each of your days be enriched with meaning and fulfillment, no matter your age or stage in life."
+        ]
     },
     {
         "term": "icon/o",
@@ -4230,23 +4247,30 @@
         "examples": [
             [
                 "dismiss",
-                "to send someone away"
+                "to send someone away",
+                "The teacher dismissed the class early because of the storm."
             ],
             [
                 "missile",
-                "a weapon sent into the air"
+                "a weapon sent into the air",
+                "The military launched a missile to intercept the incoming threat."
             ],
             [
                 "emit",
-                "to send something out"
+                "to send something out",
+                "The device can emit a signal to alert nearby users."
             ],
             [
                 "admittance",
-                "entry."
+                "entry.",
+                "Her application for admittance to MIT was successful, making her the first in her family to attend a university of such prestige."
             ]
         ],
         "type": "root",
-        "id": 208
+        "id": 208,
+        "motivational_quotes": [
+            "The path to success is often guarded by the gates of challenge and doubt, but remember, every step forward, no matter how small, is a step towards gaining <strong>admittance</strong> into the realm of your dreams. Embrace each moment, for it is in the journey where true growth lies."
+        ]
     },
     {
         "term": "mob",
@@ -5391,19 +5415,25 @@
         "examples": [
             [
                 "applaud",
-                "to show approval of especially by clapping the hands"
+                "to show approval of especially by clapping the hands",
+                "The audience applauded the performance, showing their approval with enthusiastic claps."
             ],
             [
                 "explosion",
-                "an act of exposing something as invalid or baseless"
+                "an act of exposing something as invalid or baseless",
+                "The scientist's careful analysis led to the explosion of the widely believed myth about the creature's existence."
             ],
             [
                 "plausible",
-                "worthy of being applauded"
+                "worthy of being applauded",
+                "The actor's performance was so plausible that it earned a standing ovation from the audience."
             ]
         ],
         "type": "root",
-        "id": 264
+        "id": 264,
+        "motivational_quotes": [
+            "Every dream begins with a vision that seems just beyond the grasp of <strong>plausible</strong> reality. Yet, it is within these very visions that the seeds of our greatest achievements lie. Believe in the power of your dreams, for what seems im<strong>plausible</strong> today may be the foundation of your tomorrow."
+        ]
     },
     {
         "term": "pneum/o",
@@ -6349,19 +6379,22 @@
                 "sextet",
                 "a composition or group of six",
                 "The band played a lively sextet, showcasing the talents of six musicians.",
-                "The jazz band was a sextet, featuring six talented musicians playing together."
+                "The jazz band was a sextet, featuring six talented musicians playing together.",
+                "The jazz band was a sextet, featuring six talented musicians playing together harmoniously."
             ],
             [
                 "sextuple",
                 "sixfold",
                 "The company's profits have sextupled over the past six years.",
-                "The company's profits have sextupled over the last six years."
+                "The company's profits have sextupled over the last six years.",
+                "The company's profits have sextupled over the last decade."
             ],
             [
                 "sexagenarian",
                 "person in his/her sixties.",
                 "The sexagenarian enjoyed the peacefulness of the morning walk, reflecting on a life well-lived.",
-                "The sexagenarian enjoyed a peaceful retirement, spending his days reading and walking in the park."
+                "The sexagenarian enjoyed a peaceful retirement, spending his days reading and walking in the park.",
+                "The sexagenarian couple celebrated their 60th birthdays by renewing their vows."
             ]
         ],
         "type": "root",
