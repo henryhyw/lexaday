@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Term Gallery</title>
   <style>
     :root {
@@ -96,56 +96,18 @@
   </div>
 
   <script>
-    // For demonstration, we embed term data as an array.
-    // In practice, you could fetch this data from a server or embed all rsdata.
-    const terms = [
-      {
-        "id": "103",
-        "term": "en, in",
-        "meaning": "inside, inwards",
-        "examples": [
-          ["envision", "to picture in the mind", "I always envision a bright future when I face challenges."],
-          ["enclose", "lock inside", "She decided to enclose the letter in a sealed envelope."],
-          ["inwards", "towards the inside", "The design draws your eyes inwards towards the central artwork."]
-        ],
-        "motivational_quotes": [
-          "Believe in your inner strength and let it shine.",
-          "Every challenge is an opportunity to go inwards and grow."
-        ],
-        // Array of image URLs – these should point to your generated images.
-        // For example, these names follow the pattern: termID_userID.png.
-        "images": [
-          "images/103_72831429.png",
-          "images/103_14589037.png",
-          "images/103_60247318.png",
-          "images/103_81926455.png",
-          "images/103_11111111.png",
-          "images/103_22222222.png",
-          "images/103_33333333.png",
-          "images/103_44444444.png",
-          "images/103_55555555.png",
-          "images/103_66666666.png",
-          "images/103_77777777.png",
-          "images/103_88888888.png",
-          "images/103_99999999.png",
-          "images/103_00000000.png"
-        ]
-      }
-      // ... you can add more terms if needed
-    ];
-
-    // Utility: Get query parameter by name.
+    // Utility: Get query parameter by name (e.g. ?id=103).
     function getQueryParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
 
     // Group images into rows based on the following rules:
-    // If there is one image: one row.
-    // If ≥2 images:
-    //  - If total mod 3 == 0: rows of 3.
-    //  - If remainder == 1: use (n-4) images in rows of 3, then last two rows with 2 images each.
-    //  - If remainder == 2: use (n-2) images in rows of 3, then one row with 2 images.
+    // - If there is one image: one row.
+    // - If ≥2 images:
+    //   - If total mod 3 == 0: rows of 3.
+    //   - If remainder == 1: use (n-4) images in rows of 3, then last two rows with 2 images each.
+    //   - If remainder == 2: use (n-2) images in rows of 3, then one row with 2 images.
     function groupImages(images) {
       const n = images.length;
       const rows = [];
@@ -199,65 +161,95 @@
       });
     }
 
-    // Populate the term information.
+    // Display the chosen term’s info in the HTML.
     function displayTerm(term) {
-      document.getElementById('term-title').textContent = term.term;
-      document.getElementById('term-meaning').textContent = term.meaning;
+      document.getElementById('term-title').textContent = term.term || "";
+      document.getElementById('term-meaning').textContent = term.meaning || "";
 
       // Display motivational quotes.
       const mqDiv = document.getElementById('motivational-quotes');
-      mqDiv.innerHTML = "<h3>Motivational Quotes</h3>";
-      term.motivational_quotes.forEach(quote => {
-        const p = document.createElement('p');
-        p.textContent = quote;
-        mqDiv.appendChild(p);
-      });
+      mqDiv.innerHTML = "";
+      if(term.motivational_quotes && term.motivational_quotes.length > 0) {
+        const mqHeader = document.createElement('h3');
+        mqHeader.textContent = "Motivational Quotes";
+        mqDiv.appendChild(mqHeader);
+
+        term.motivational_quotes.forEach(quote => {
+          const p = document.createElement('p');
+          p.textContent = quote;
+          mqDiv.appendChild(p);
+        });
+      }
 
       // Display examples with sample sentences.
       const exDiv = document.getElementById('examples');
-      exDiv.innerHTML = "<h3>Examples</h3>";
-      term.examples.forEach(example => {
-        // Each example: [word, meaning, sample sentence 1, sample sentence 2, ...]
-        const exContainer = document.createElement('div');
-        exContainer.classList.add('example');
-        const wordEl = document.createElement('strong');
-        wordEl.textContent = example[0] + ": ";
-        const meaningEl = document.createElement('span');
-        meaningEl.textContent = example[1];
-        const sentenceList = document.createElement('ul');
-        for(let i = 2; i < example.length; i++){
-          const li = document.createElement('li');
-          li.textContent = example[i];
-          sentenceList.appendChild(li);
-        }
-        exContainer.appendChild(wordEl);
-        exContainer.appendChild(meaningEl);
-        if(sentenceList.children.length > 0){
-          exContainer.appendChild(sentenceList);
-        }
-        exDiv.appendChild(exContainer);
-      });
+      exDiv.innerHTML = "";
+      if(term.examples && term.examples.length > 0) {
+        const exHeader = document.createElement('h3');
+        exHeader.textContent = "Examples";
+        exDiv.appendChild(exHeader);
+
+        term.examples.forEach(example => {
+          // Each example: [word, meaning, sample sentence 1, sample sentence 2, ...]
+          const exContainer = document.createElement('div');
+          exContainer.classList.add('example');
+          const wordEl = document.createElement('strong');
+          wordEl.textContent = example[0] + ": ";
+          const meaningEl = document.createElement('span');
+          meaningEl.textContent = example[1];
+          const sentenceList = document.createElement('ul');
+          for(let i = 2; i < example.length; i++){
+            const li = document.createElement('li');
+            li.textContent = example[i];
+            sentenceList.appendChild(li);
+          }
+          exContainer.appendChild(wordEl);
+          exContainer.appendChild(meaningEl);
+          if(sentenceList.children.length > 0){
+            exContainer.appendChild(sentenceList);
+          }
+          exDiv.appendChild(exContainer);
+        });
+      }
 
       // Build gallery using the term's images.
+      const galleryDiv = document.getElementById('gallery');
       if(term.images && term.images.length > 0) {
         buildGallery(term.images);
       } else {
-        document.getElementById('gallery').textContent = "No images available.";
+        galleryDiv.textContent = "No images available.";
       }
     }
 
-    // Main: get the term id from the query string, find term and display.
-    (function(){
+    // Main: fetch rsdata.json, get the term id from the query string, and display that term.
+    (async function(){
       const termId = getQueryParam("id");
       if(!termId) {
-        alert("No term id specified in the URL.");
+        alert("No term id specified in the URL. Use ?id=xxx");
         return;
       }
-      const term = terms.find(t => t.id === termId);
+
+      // Load rsdata.json
+      let rsdata = [];
+      try {
+        const response = await fetch('rsdata.json');
+        if(!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
+        }
+        rsdata = await response.json();
+      } catch (error) {
+        alert("Could not load rsdata.json:\n" + error);
+        return;
+      }
+
+      // Find the requested term
+      const term = rsdata.find(t => String(t.id) === String(termId));
       if(!term) {
-        alert("Term not found.");
+        alert("Term not found in rsdata.json for id=" + termId);
         return;
       }
+
+      // Display the term
       displayTerm(term);
     })();
   </script>
