@@ -2,7 +2,7 @@ name: Lexaday Update
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Daily at 00:00 UTC, which is 11am AEDT (UTC+11)
+    - cron: "0 23 * * *"  # Daily at 23:00 UTC = 10:00 AM AEDT
   workflow_dispatch:
 
 jobs:
@@ -40,7 +40,6 @@ jobs:
           HF_API_TOKEN8: ${{ secrets.HF_API_TOKEN8 }}
           HF_API_TOKEN9: ${{ secrets.HF_API_TOKEN9 }}
           HF_API_TOKEN10: ${{ secrets.HF_API_TOKEN10 }}
-          STABILITY_API_KEY: ${{ secrets.STABILITY_API_KEY }}
           RECORDS_LINK: ${{ secrets.RECORDS_LINK }}
         run: |
           python lexaday.py

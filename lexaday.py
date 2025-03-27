@@ -18,13 +18,19 @@ from huggingface_hub import InferenceClient
 load_dotenv()
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
-# Comma-separated list of receiver emails
-RECEIVER_EMAILS = os.getenv("RECEIVER_EMAILS", "").split(",")
+# Comma-separated list of receiver emails in format: userID:email
+raw_receivers = os.getenv("RECEIVER_EMAILS", "").split(",")
+RECEIVER_MAPPING = {}
+for r in raw_receivers:
+    if ":" in r:
+        uid, email = r.split(":", 1)
+        RECEIVER_MAPPING[uid.strip()] = email.strip()
+
 # (Optional) A link to online records or similar
 RECORDS_LINK = os.getenv("RECORDS_LINK", "N/A")
 
 # Files for shared data
-RSDATA_FILENAME = "rsdata.json"  # Each item must have keys: "id", "term", "meaning", "examples"
+RSDATA_FILENAME = "rsdata.json"  # Each item must have keys: "id", "term", "meaning", "examples", "motivational_quotes", etc.
 IMAGES_FOLDER = "images"
 
 # --- USER DATA FILE FUNCTIONS ---
@@ -32,30 +38,34 @@ def sanitize_filename(name: str) -> str:
     # Allow only alphanumeric characters for file names.
     return "".join(c if c.isalnum() else "_" for c in name)
 
-def get_user_data_filename(email: str) -> str:
-    return f"user_{sanitize_filename(email)}.json"
+def get_user_data_filename(user_id: str) -> str:
+    return f"user_{sanitize_filename(user_id)}.json"
 
-def load_user_data(email: str):
-    filename = get_user_data_filename(email)
+def load_user_data(user_id: str):
+    filename = get_user_data_filename(user_id)
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             return json.load(f)
     # If not present, initialize with run_count 0 and empty records list.
     data = {"run_count": 0, "records": []}
-    save_user_data(email, data)
+    save_user_data(user_id, data)
     return data
 
-def save_user_data(email: str, data):
-    filename = get_user_data_filename(email)
+def save_user_data(user_id: str, data):
+    filename = get_user_data_filename(user_id)
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
+
+def save_rsdata(rsdata):
+    with open(RSDATA_FILENAME, "w", encoding="utf-8") as f:
+        json.dump(rsdata, f, indent=4, ensure_ascii=False)
 
 # --- STRUCTURED OUTPUT SCHEMAS ---
 class ExampleSentenceResponse(BaseModel):
     sample_sentence: str
 
-class EncouragingSentenceResponse(BaseModel):
-    encouraging_sentence: str
+class MotivationalQuoteResponse(BaseModel):
+    motivational_quote: str
 
 # --- HELPER FUNCTION FOR HF TEXT GENERATION ---
 def hf_generate_text(prompt: str, max_tokens: int, model: str, temperature: float) -> str:
@@ -104,23 +114,23 @@ def query_chatgpt4_structured(prompt: str, model="Qwen/Qwen2.5-72B-Instruct") ->
         print("❌ Qwen API error:", e)
         return ""
 
-def query_encouraging_sentence(word: str, model="Qwen/Qwen2.5-72B-Instruct") -> str:
+def query_motivational_quote(word: str, model="Qwen/Qwen2.5-72B-Instruct") -> str:
     """
-    Generate a moderate long encouraging sentence that includes the given word.
+    Generate a moderate long motivational quote of the day that includes the given word.
     """
     prompt = (
-        f"Generate a moderate long encouraging sentence of the day that includes the word '{word}'. "
-        "Respond with a JSON object exactly matching this schema: {\"encouraging_sentence\": string}."
+        f"Generate a moderate long motivational quote of the day that includes the word '{word}'. "
+        "Respond with a JSON object exactly matching this schema: {\"motivational_quote\": string}."
     )
     try:
         content = hf_generate_text(prompt, max_tokens=100, model=model, temperature=0.7)
         try:
             parsed_json = json.loads(content)
-            return parsed_json.get("encouraging_sentence", "").strip()
+            return parsed_json.get("motivational_quote", "").strip()
         except json.JSONDecodeError:
             return content.strip()
     except Exception as e:
-        print("❌ Qwen API error (encouraging sentence):", e)
+        print("❌ Qwen API error (motivational quote):", e)
         return ""
 
 def query_stable_diffusion_prompt(term, model="Qwen/Qwen2.5-72B-Instruct") -> str:
@@ -153,7 +163,6 @@ def generate_image_dalle(prompt: str, filename: str):
     model_id = "stabilityai/stable-diffusion-xl-base-1.0"
     api_url = f"https://api-inference.huggingface.co/models/{model_id}"
 
-    # Load all available tokens from environment
     token_keys = [
         "HF_API_TOKEN", "HF_API_TOKEN2", "HF_API_TOKEN3", "HF_API_TOKEN4", "HF_API_TOKEN5",
         "HF_API_TOKEN6", "HF_API_TOKEN7", "HF_API_TOKEN8", "HF_API_TOKEN9", "HF_API_TOKEN10"
@@ -236,18 +245,15 @@ def get_term_by_id(rsdata, term_id):
     return None
 
 # --- IMAGE & SAMPLE SENTENCE FUNCTIONS ---
-def generate_term_image(term):
+def generate_term_image(term, user_id):
     os.makedirs(IMAGES_FOLDER, exist_ok=True)
-    filename = os.path.join(IMAGES_FOLDER, f"{term['id']}.png")
-    # Check if already generated
+    filename = os.path.join(IMAGES_FOLDER, f"{term['id']}_{user_id}.png")
     if os.path.exists(filename):
-        print(f"Image for term '{term['term']}' already exists: {filename}")
+        print(f"Image for term '{term['term']}' already exists for user {user_id}: {filename}")
         return filename
 
-    # Generate a Stable Diffusion prompt using Qwen
     sd_prompt = query_stable_diffusion_prompt(term)
     if not sd_prompt:
-        # Fallback to a default prompt if Qwen call fails
         sd_prompt = f"Create an image that visually represents the root word '{term['term']}' which means '{term['meaning']}'."
     generate_image_dalle(sd_prompt, filename)
     return filename
@@ -259,15 +265,9 @@ def generate_example_sentence(example_word, example_meaning, term):
         "Respond with a JSON object exactly matching this schema: {\"sample_sentence\": string}."
     )
     return query_chatgpt4_structured(prompt)
-    # return "This is a sample sentence for testing."
 
 # --- EMBED IMAGES INLINE AND SEND HTML EMAIL ---
 def send_email(subject: str, html_body: str, to_email: str, inline_image_paths: list):
-    """
-    Sends an HTML email with inline images. The images are referenced in the HTML
-    via <img src="cid:some_filename.png" /> and we embed them in a multipart/related
-    message with the same Content-ID.
-    """
     msg_root = MIMEMultipart('related')
     msg_root['Subject'] = subject
     msg_root['From'] = formataddr(("Lexaday Bot", SENDER_EMAIL))
@@ -282,7 +282,7 @@ def send_email(subject: str, html_body: str, to_email: str, inline_image_paths: 
     for path in inline_image_paths:
         if not os.path.exists(path):
             continue
-        filename = os.path.basename(path)  # e.g. "123.png"
+        filename = os.path.basename(path)
         try:
             with open(path, 'rb') as f:
                 img_data = f.read()
@@ -302,10 +302,9 @@ def send_email(subject: str, html_body: str, to_email: str, inline_image_paths: 
         print(f"❌ Failed to send email to {to_email}: {e}")
 
 # --- MAIN WORKFLOW FOR EACH USER ---
-def process_for_user(user_email: str):
-    print(f"\n========== Processing for {user_email} ==========")
-    user_data = load_user_data(user_email)
-    # Increment run count for this user.
+def process_for_user(user_id: str, user_email: str):
+    print(f"\n========== Processing for {user_email} (User ID: {user_id}) ==========")
+    user_data = load_user_data(user_id)
     user_data["run_count"] += 1
     current_run = user_data["run_count"]
     print(f"🔢 Current run count for {user_email}: {current_run}\n")
@@ -313,40 +312,63 @@ def process_for_user(user_email: str):
     rsdata = load_rsdata()
     records = user_data.get("records", [])
     
-    # Introduce a new term if available.
     new_term = introduce_new_term(records, rsdata, current_run)
     new_term_image_path = None
     if new_term:
-        new_term_image_path = generate_term_image(new_term)
+        new_term_image_path = generate_term_image(new_term, user_id)
     
-    # If a new term was introduced and has at least one example, pick one example word for the encouraging sentence
+    # Generate a motivational quote (replacing the earlier "encouraging sentence")
     if new_term and new_term.get("examples"):
         example_word = random.choice(new_term["examples"])[0]
     else:
         example_word = new_term["term"] if new_term else "keep going"
-    encouraging_sentence = query_encouraging_sentence(example_word)
-    encouraging_sentence = encouraging_sentence.replace(example_word, f"<strong>{example_word}</strong>")
-    # encouraging_sentence = "Test Encouraging Sentence"
-
-    # Determine which records are due for review
+    motivational_quote = query_motivational_quote(example_word)
+    motivational_quote = motivational_quote.replace(example_word, f"<strong>{example_word}</strong>")
+    
+    # Store the motivational quote in rsdata for the term
+    if new_term:
+        if "motivational_quotes" not in new_term or not isinstance(new_term["motivational_quotes"], list):
+            new_term["motivational_quotes"] = []
+        new_term["motivational_quotes"].append(motivational_quote)
+    
+    # Update sample sentences for new term examples (stored within each example list starting from the third entry)
+    if new_term and new_term.get("examples"):
+        examples = new_term["examples"]
+        for i, ex in enumerate(examples):
+            ex_word = ex[0]
+            ex_meaning = ex[1]
+            sentence = generate_example_sentence(ex_word, ex_meaning, new_term)
+            if isinstance(new_term["examples"][i], list):
+                new_term["examples"][i].append(sentence)
+            else:
+                new_term["examples"][i] = [ex_word, ex_meaning, sentence]
+    
     due_records = get_due_review_records(records, current_run)
     review_images = []
     if due_records:
         for rec in due_records:
             term_obj = get_term_by_id(rsdata, rec["id"])
             if term_obj:
-                path = generate_term_image(term_obj)
+                path = generate_term_image(term_obj, user_id)
                 if path and os.path.exists(path):
                     review_images.append(path)
-                # Update review scheduling
+                # Update sample sentences for review term examples
+                if term_obj.get("examples"):
+                    for i, ex in enumerate(term_obj["examples"]):
+                        ex_word = ex[0]
+                        ex_meaning = ex[1]
+                        sentence = generate_example_sentence(ex_word, ex_meaning, term_obj)
+                        if isinstance(term_obj["examples"][i], list):
+                            term_obj["examples"][i].append(sentence)
+                        else:
+                            term_obj["examples"][i] = [ex_word, ex_meaning, sentence]
                 rec["last_reviewed"] = current_run
                 rec["review_interval"] *= 2
     else:
         print("✅ No terms are due for review this run.")
 
-    # Save updated user data
-    user_data["records"] = records
-    save_user_data(user_email, user_data)
+    save_user_data(user_id, user_data)
+    save_rsdata(rsdata)
 
     html_body = f"""
 <html>
@@ -407,10 +429,8 @@ def process_for_user(user_email: str):
 <body>
     <div class="container">
         <h1 style="text-align: center;">Daily Lexaday Update</h1>
-        <p style="text-align: center; font-style: italic; margin-top: 10px;">{encouraging_sentence}</p>
+        <p style="text-align: center; font-style: italic; margin-top: 10px;">{motivational_quote}</p>
 """
-
-    # If a new term was introduced, add its card.
     if new_term:
         html_body += f"""
             <div class="card">
@@ -419,28 +439,28 @@ def process_for_user(user_email: str):
                         <td style="width: 50%; text-align: center; font-size: 1.8em; font-weight: bold;">
                             {new_term['term']}
                         </td>
-                        <td style="width: auto; text-align: center;">
-                            |
-                        </td>
+                        <td style="width: auto; text-align: center;">|</td>
                         <td style="width: 50%; text-align: center; font-size: 1.4em; color: #555;">
                             {new_term['meaning']}
                         </td>
                     </tr>
                 </table>
                 <div class="image">
-                    <img src="cid:{new_term['id']}.png" alt="{new_term['term']} image"/>
+                    <img src="cid:{new_term['id']}_{user_id}.png" alt="{new_term['term']} image"/>
                 </div>
                 <hr/>
                 <div class="examples">
                     <h3>Examples</h3>
         """
         examples = new_term.get("examples", [])
-        for i, (ex_word, ex_meaning) in enumerate(examples):
-            sentence = generate_example_sentence(ex_word, ex_meaning, new_term)
+        for i, ex in enumerate(examples):
+            ex_word = ex[0]
+            ex_meaning = ex[1]
+            sample_sentence = ex[-1] if len(ex) > 2 else ""
             html_body += f"""
                     <div class="example">
                         <p><strong>{ex_word}:</strong> {ex_meaning}</p>
-                        <p>{sentence}</p>
+                        <p>{sample_sentence}</p>
                     </div>
             """
             if i != len(examples) - 1:
@@ -449,8 +469,6 @@ def process_for_user(user_email: str):
                 </div>
             </div>
         """
-
-    # If there are terms due for review, add a card for each.
     if due_records:
         html_body += """
             <div class="review-section">
@@ -466,28 +484,28 @@ def process_for_user(user_email: str):
                             <td style="width: 50%; text-align: center; font-size: 1.8em; font-weight: bold;">
                                 {term_obj['term']}
                             </td>
-                            <td style="width: auto; text-align: center;">
-                                |
-                            </td>
+                            <td style="width: auto; text-align: center;">|</td>
                             <td style="width: 50%; text-align: center; font-size: 1.4em; color: #555;">
                                 {term_obj['meaning']}
                             </td>
                         </tr>
                     </table>
                     <div class="image">
-                        <img src="cid:{term_obj['id']}.png" alt="{term_obj['term']} image"/>
+                        <img src="cid:{term_obj['id']}_{user_id}.png" alt="{term_obj['term']} image"/>
                     </div>
                     <hr/>
                     <div class="examples">
                         <h3>Examples</h3>
                 """
                 examples = term_obj.get("examples", [])
-                for i, (ex_word, ex_meaning) in enumerate(examples):
-                    sentence = generate_example_sentence(ex_word, ex_meaning, term_obj)
+                for i, ex in enumerate(examples):
+                    ex_word = ex[0]
+                    ex_meaning = ex[1]
+                    sample_sentence = ex[-1] if len(ex) > 2 else ""
                     html_body += f"""
                         <div class="example">
                             <p><strong>{ex_word}:</strong> {ex_meaning}</p>
-                            <p>{sentence}</p>
+                            <p>{sample_sentence}</p>
                         </div>
                     """
                     if i != len(examples) - 1:
@@ -504,29 +522,22 @@ def process_for_user(user_email: str):
         </html>
         """
 
-    # Gather the inline image paths
     inline_images = []
     if new_term and new_term_image_path and os.path.exists(new_term_image_path):
         inline_images.append(new_term_image_path)
-
-    # Add review images
-    review_images_set = set(review_images)  # to avoid duplicates
+    review_images_set = set(review_images)
     for path in review_images_set:
         if path not in inline_images:
             inline_images.append(path)
 
-    # Subject
     subject = "Daily Lexaday Update"
-
-    # Send the email
     send_email(subject, html_body, user_email, inline_images)
 
 # --- MAIN SCRIPT EXECUTION ---
 if __name__ == "__main__":
-    if not RECEIVER_EMAILS or RECEIVER_EMAILS == [""]:
+    if not RECEIVER_MAPPING:
         print("No receiver emails specified in environment variables.")
     else:
-        for email in RECEIVER_EMAILS:
-            email = email.strip()
+        for user_id, email in RECEIVER_MAPPING.items():
             if email:
-                process_for_user(email)
+                process_for_user(user_id, email)
