@@ -893,19 +893,25 @@
         "examples": [
             [
                 "cardiac",
-                "relating to the heart"
+                "relating to the heart",
+                "The patient underwent a cardiac examination to assess the health of their heart."
             ],
             [
                 "cardiogenic",
-                "resulting from heart disease"
+                "resulting from heart disease",
+                "The patient's cardiogenic shock was a result of severe heart failure."
             ],
             [
                 "cardiologist",
-                "a heart doctor"
+                "a heart doctor",
+                "A cardiologist is a medical doctor who specializes in treating diseases of the heart and blood vessels."
             ]
         ],
         "type": "root",
-        "id": 43
+        "id": 43,
+        "motivational_quotes": [
+            "Just as a <strong>cardiologist</strong> dedicates their life to understanding and healing the most vital organ, so too must we commit to nurturing our own hearts with kindness, courage, and relentless pursuit of our dreams. Let today be a step towards living with a heart full of purpose and passion."
+        ]
     },
     {
         "term": "carn/i",
@@ -4809,17 +4815,20 @@
             [
                 "optimal",
                 "the best, the most desirable",
-                "The optimal solution for reducing energy consumption is to use more efficient appliances."
+                "The optimal solution for reducing energy consumption is to use more efficient appliances.",
+                "The optimal solution ensures the best outcome with the least amount of resources."
             ],
             [
                 "optimize",
                 "to make the best of",
-                "To optimize your study schedule, allocate time based on the difficulty and importance of each subject."
+                "To optimize your study schedule, allocate time based on the difficulty and importance of each subject.",
+                "To optimize your website's performance, ensure it loads quickly and is mobile-friendly."
             ],
             [
                 "optimum",
                 "the best something could be.",
-                "The optimum temperature for brewing coffee is between 92°C and 96°C."
+                "The optimum temperature for brewing coffee is between 92°C and 96°C.",
+                "The optimum solution ensures the best outcome for all parties involved."
             ]
         ],
         "type": "root",
