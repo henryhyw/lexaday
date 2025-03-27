@@ -486,12 +486,11 @@ def process_for_user(user_id: str, user_email: str):
                 html_body += "<hr/>"
         html_body += f"""
                 </div>
-                    <div style="text-align: left; color: #555; font-size: 0.9em; margin-top: 10px;">
-                        <a href="https://www.henryw.me/lexaday/term.html?id={new_term['id']}" style="color: #555; text-decoration: none;">See more images and examples</a>
-                    </div>
-                </div>
-        """
-        html_body += """
+                <div style="text-align: right; color: #555; font-size: 0.9em; margin-top: 20px; margin-right: 10px;">
+                    <a href="https://www.henryw.me/lexaday/term.html?id={new_term['id']}" style="color: #555; text-decoration: none; display: inline-block; text-align: right;">
+                        See more images<br/>
+                        and examples →
+                    </a>
                 </div>
             </div>
         """
@@ -504,24 +503,24 @@ def process_for_user(user_id: str, user_email: str):
             term_obj = get_term_by_id(rsdata, rec["id"])
             if term_obj:
                 html_body += f"""
-                <div class="card">
-                    <table style="width: 100%; background-color: #fafafa; padding: 10px; border-collapse: collapse;">
-                        <tr>
-                            <td style="width: 50%; text-align: center; font-size: 1.8em; font-weight: bold;">
-                                {term_obj['term']}
-                            </td>
-                            <td style="width: auto; text-align: center;">|</td>
-                            <td style="width: 50%; text-align: center; font-size: 1.4em; color: #555;">
-                                {term_obj['meaning']}
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="image">
-                        <img src="cid:{term_obj['id']}_{user_id}.png" alt="{term_obj['term']} image"/>
-                    </div>
-                    <hr/>
-                    <div class="examples">
-                        <h3>Examples</h3>
+                    <div class="card">
+                        <table style="width: 100%; background-color: #fafafa; padding: 10px; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 50%; text-align: center; font-size: 1.8em; font-weight: bold;">
+                                    {term_obj['term']}
+                                </td>
+                                <td style="width: auto; text-align: center;">|</td>
+                                <td style="width: 50%; text-align: center; font-size: 1.4em; color: #555;">
+                                    {term_obj['meaning']}
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="image">
+                            <img src="cid:{term_obj['id']}_{user_id}.png" alt="{term_obj['term']} image"/>
+                        </div>
+                        <hr/>
+                        <div class="examples">
+                            <h3>Examples</h3>
                 """
                 examples = term_obj.get("examples", [])
                 for i, ex in enumerate(examples):
@@ -529,31 +528,24 @@ def process_for_user(user_id: str, user_email: str):
                     ex_meaning = ex[1]
                     sample_sentence = ex[-1] if len(ex) > 2 else ""
                     html_body += f"""
-                        <div class="example">
-                            <p><strong>{ex_word}:</strong> {ex_meaning}</p>
-                            <p>{sample_sentence}</p>
-                        </div>
+                            <div class="example">
+                                <p><strong>{ex_word}:</strong> {ex_meaning}</p>
+                                <p>{sample_sentence}</p>
+                            </div>
                     """
                     if i != len(examples) - 1:
                         html_body += "<hr/>"
                 html_body += f"""
                         </div>
-                        <div style="text-align: left; color: #555; font-size: 0.9em; margin-top: 10px;">
-                            <a href="https://www.henryw.me/lexaday/term.html?id={term_obj['id']}" style="color: #555; text-decoration: none;">See more images and examples</a>
+                        <div style="text-align: right; color: #555; font-size: 0.9em; margin-top: 20px; margin-right: 10px;">
+                            <a href="https://www.henryw.me/lexaday/term.html?id={term_obj['id']}" style="color: #555; text-decoration: none; display: inline-block; text-align: right;">
+                                See more images<br/>
+                                and examples →
+                            </a>
                         </div>
                     </div>
                 """
-                html_body += """
-                    </div>
-                </div>
-                """
         html_body += "</div>"
-        
-    html_body += """
-            </div>
-        </body>
-        </html>
-        """
 
     inline_images = []
     if new_term and new_term_image_path and os.path.exists(new_term_image_path):

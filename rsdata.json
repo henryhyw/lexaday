@@ -81,23 +81,30 @@
         "examples": [
             [
                 "accelerate",
-                "to increase the speed of"
+                "to increase the speed of",
+                "To accelerate the process, we will streamline our workflows."
             ],
             [
                 "accessible",
-                "easily entered, approached, or obtained"
+                "easily entered, approached, or obtained",
+                "The building is accessible to everyone, including those with disabilities, through its wide entrance and elevator."
             ],
             [
                 "admittance",
-                "allowing into"
+                "allowing into",
+                "The school granted her admittance into the advanced program."
             ],
             [
                 "adherent",
-                "sticking to something"
+                "sticking to something",
+                "The adherent material ensured that the a/c/d components remained securely in place."
             ]
         ],
         "type": "root",
-        "id": 4
+        "id": 4,
+        "motivational_quotes": [
+            "The path to success is often guarded by the gates of challenge and adversity. Each time you seek <strong>admittance</strong>, remember that the effort to push those gates open is what strengthens your resolve and paves the way for your triumph. Embrace each obstacle as an opportunity to grow, and you will find that the doors to your dreams are more likely to swing wide open."
+        ]
     },
     {
         "term": "acro",
@@ -695,25 +702,29 @@
                 "bellicose",
                 "warlike",
                 "The bellicose nation was always preparing for conflict, believing that strength was best demonstrated through military might.",
-                "The bellicose nation was always on the brink of war with its neighbors."
+                "The bellicose nation was always on the brink of war with its neighbors.",
+                "The bellicose nation was always ready for conflict, maintaining a strong military presence along its borders."
             ],
             [
                 "belligerent",
                 "hostile, ready to fight",
                 "The belligerent nations increased their military presence along the borders, ready to engage in conflict.",
-                "The belligerent nation was poised to attack its neighbor, increasing tensions in the region."
+                "The belligerent nation was poised to attack its neighbor, increasing tensions in the region.",
+                "The belligerent nations were on the brink of war, each ready to fight at a moment's notice."
             ],
             [
                 "rebel",
                 "person who opposes and fights",
                 "The rebel rang the bell to signal the start of the uprising.",
-                "The rebel rang the bell to signal the start of the uprising."
+                "The rebel rang the bell to signal the start of the uprising.",
+                "The rebel rang the bell, signaling the start of the uprising."
             ],
             [
                 "antebellum",
                 "before the war",
                 "",
-                "The antebellum period in American history refers to the time before the Civil War."
+                "The antebellum period in American history refers to the time before the Civil War.",
+                "The antebellum period refers to the time before the Civil War in the United States."
             ]
         ],
         "type": "root",
@@ -906,17 +917,20 @@
                 "cardiac",
                 "relating to the heart",
                 "The patient underwent a cardiac examination to assess the health of their heart.",
-                "The patient was diagnosed with a cardiac condition that required immediate attention."
+                "The patient was diagnosed with a cardiac condition that required immediate attention.",
+                "The patient was diagnosed with a cardiac condition requiring immediate attention."
             ],
             [
                 "cardiogenic",
                 "resulting from heart disease",
                 "The patient's cardiogenic shock was a result of severe heart failure.",
+                "The patient's shortness of breath was determined to be cardiogenic, resulting from underlying heart disease.",
                 "The patient's shortness of breath was determined to be cardiogenic, resulting from underlying heart disease."
             ],
             [
                 "cardiologist",
                 "a heart doctor",
+                "A cardiologist is a medical doctor who specializes in treating diseases of the heart and blood vessels.",
                 "A cardiologist is a medical doctor who specializes in treating diseases of the heart and blood vessels.",
                 "A cardiologist is a medical doctor who specializes in treating diseases of the heart and blood vessels."
             ]
@@ -5268,19 +5282,28 @@
         "examples": [
             [
                 "photogenic",
-                "caused by light"
+                "caused by light",
+                "The area was photogenic, with light causing beautiful shadows and highlights on the landscape.",
+                "The plant exhibited photogenic behavior, bending towards the light source."
             ],
             [
                 "photograph",
-                "image made on light-sensitive film"
+                "image made on light-sensitive film",
+                "A photograph captures an image on light-sensitive film.",
+                "A photograph captures a moment in time on light-sensitive film."
             ],
             [
                 "photon",
-                "the smallest possible unit of light."
+                "the smallest possible unit of light.",
+                "A photon is the smallest unit of light that carries energy.",
+                "A photon is the smallest unit of light that carries energy."
             ]
         ],
         "type": "root",
-        "id": 259
+        "id": 259,
+        "motivational_quotes": [
+            "Just like a single <strong>photon</strong> can travel vast distances across the universe to light up the darkest corners, you too have the power to illuminate the world with your unique brilliance. Embrace every moment and let your light shine bright today."
+        ]
     },
     {
         "term": "phyll/o",
@@ -6325,17 +6348,20 @@
             [
                 "sextet",
                 "a composition or group of six",
-                "The band played a lively sextet, showcasing the talents of six musicians."
+                "The band played a lively sextet, showcasing the talents of six musicians.",
+                "The jazz band was a sextet, featuring six talented musicians playing together."
             ],
             [
                 "sextuple",
                 "sixfold",
-                "The company's profits have sextupled over the past six years."
+                "The company's profits have sextupled over the past six years.",
+                "The company's profits have sextupled over the last six years."
             ],
             [
                 "sexagenarian",
                 "person in his/her sixties.",
-                "The sexagenarian enjoyed the peacefulness of the morning walk, reflecting on a life well-lived."
+                "The sexagenarian enjoyed the peacefulness of the morning walk, reflecting on a life well-lived.",
+                "The sexagenarian enjoyed a peaceful retirement, spending his days reading and walking in the park."
             ]
         ],
         "type": "root",
