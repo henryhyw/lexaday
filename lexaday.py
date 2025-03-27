@@ -475,7 +475,7 @@ def process_for_user(user_id: str, user_email: str):
         html_body += f"""
                     </div>
                     <div style="text-align: right; color: #555; font-size: 0.9em; margin-top: 10px;">
-                        <a href="term.html?id={new_term['id']}" style="color: #555; text-decoration: none;">View full details</a>
+                        <a href="term.html?id={new_term['id']}" style="color: #555; text-decoration: none;">See more images, quotes, and sample sentences →</a>
                     </div>
                 </div>
         """
@@ -511,7 +511,7 @@ def process_for_user(user_id: str, user_email: str):
                 html_body += f"""
                         </div>
                         <div style="text-align: right; color: #555; font-size: 0.9em; margin-top: 10px;">
-                            <a href="term.html?id={term_obj['id']}" style="color: #555; text-decoration: none;">View full details</a>
+                            <a href="term.html?id={term_obj['id']}" style="color: #555; text-decoration: none;">See more images, quotes, and sample sentences →</a>
                         </div>
                     </div>
                 """
