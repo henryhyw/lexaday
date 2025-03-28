@@ -42,3 +42,5 @@ node_modules/
 lexaday_archived.py
 test.py
 callapi.py
+
+model_server/
