@@ -4876,14 +4876,14 @@
                 "to make the best of",
                 "To optimize your study schedule, allocate time based on the difficulty and importance of each subject.",
                 "To optimize your website's performance, ensure it loads quickly and is mobile-friendly.",
-                "To optimize your study schedule, allocate specific times for each subject to ensure balanced preparation."
+                "To optimize your study schedule, allocate time based on the difficulty and importance of each subject."
             ],
             [
                 "optimum",
                 "the best something could be.",
                 "The optimum temperature for brewing coffee is between 92°C and 96°C.",
                 "The optimum solution ensures the best outcome for all parties involved.",
-                "The optimum solution for reducing energy consumption is to use LED lights."
+                "The optimum solution ensures the best outcome for all parties involved."
             ]
         ],
         "type": "root",
@@ -6537,15 +6537,20 @@
         "examples": [
             [
                 "biosphere",
-                "the whole round surface of the earth"
+                "the whole round surface of the earth",
+                "The biosphere encompasses the entire surface of the Earth where life exists."
             ],
             [
                 "hemisphere",
-                "half the earth spherically shaped like a ball."
+                "half the earth spherically shaped like a ball.",
+                "The Earth is divided into two hemispheres, the Northern and Southern, by the equator."
             ]
         ],
         "type": "root",
-        "id": 319
+        "id": 319,
+        "motivational_quotes": [
+            "In the vast and intricate web of life that spans our <strong>biosphere</strong>, each of us holds a unique thread. It is in embracing our individual purpose and weaving it with the strands of others that we create the tapestry of existence, making every contribution vital and every effort meaningful."
+        ]
     },
     {
         "term": "spir",

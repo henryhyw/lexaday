@@ -371,16 +371,20 @@ def process_for_user(user_id: str, user_email: str):
                 path = generate_term_image(term_obj, user_id)
                 if path and os.path.exists(path):
                     review_images.append(path)
-                # Update sample sentences for review term examples
+                # For review terms, randomly pick an existing sample sentence for each example word.
                 if term_obj.get("examples"):
                     for i, ex in enumerate(term_obj["examples"]):
-                        ex_word = ex[0]
-                        ex_meaning = ex[1]
-                        sentence = generate_example_sentence(ex_word, ex_meaning, term_obj)
-                        if isinstance(term_obj["examples"][i], list):
-                            term_obj["examples"][i].append(sentence)
+                        # Check if there are preexisting sample sentences (starting at index 2)
+                        if len(ex) > 2:
+                            sentence = random.choice(ex[2:])
                         else:
-                            term_obj["examples"][i] = [ex_word, ex_meaning, sentence]
+                            # Fallback to generating a sentence if none exist
+                            sentence = generate_example_sentence(ex[0], ex[1], term_obj)
+                        # Update the example's sample sentence to be the randomly chosen one.
+                        if isinstance(term_obj["examples"][i], list):
+                            term_obj["examples"][i][-1] = sentence
+                        else:
+                            term_obj["examples"][i] = [ex[0], ex[1], sentence]
                 rec["last_reviewed"] = current_run
                 rec["review_interval"] *= 2
     else:
