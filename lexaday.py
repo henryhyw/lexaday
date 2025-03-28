@@ -99,7 +99,7 @@ def hf_generate_text(prompt: str, max_tokens: int, model: str, temperature: floa
     return ""
 
 # --- API FUNCTIONS ---
-def query_chatgpt4_structured(prompt: str, model="Qwen/Qwen2.5-72B-Instruct") -> str:
+def query_chatgpt4_structured(prompt: str, model="Qwen/Qwen2.5-1.5B-Instruct") -> str:
     """
     Query Qwen to generate a sample sentence (structured as JSON).
     """
@@ -114,7 +114,7 @@ def query_chatgpt4_structured(prompt: str, model="Qwen/Qwen2.5-72B-Instruct") ->
         print("❌ Qwen API error:", e)
         return ""
 
-def query_motivational_quote(word: str, model="Qwen/Qwen2.5-72B-Instruct") -> str:
+def query_motivational_quote(word: str, model="Qwen/Qwen2.5-1.5B-Instruct") -> str:
     """
     Generate a moderate long motivational quote of the day that includes the given word.
     """
@@ -133,7 +133,7 @@ def query_motivational_quote(word: str, model="Qwen/Qwen2.5-72B-Instruct") -> st
         print("❌ Qwen API error (motivational quote):", e)
         return ""
 
-def query_stable_diffusion_prompt(term, model="Qwen/Qwen2.5-72B-Instruct") -> str:
+def query_stable_diffusion_prompt(term, model="Qwen/Qwen2.5-1.5B-Instruct") -> str:
     """
     Generate a Stable Diffusion prompt that visually represents the root word.
     """

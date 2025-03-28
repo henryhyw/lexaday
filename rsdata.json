@@ -7305,7 +7305,10 @@
         "meaning": "see",
         "examples": [],
         "type": "root",
-        "id": 356
+        "id": 356,
+        "motivational_quotes": [
+            "```json\n{\n  \"motivational_quote\": \"Let your courage be as bright as the stars in the night sky, and let your passion shine brighter than any light you can imagine. Each step forward is an opportunity to grow, and every moment spent on learning is a chance to become a better version of yourself. Your journey may not always be easy, but remember, <strong>vid</strong>, every step counts, and each victory is one more victory over fear.\"\n}\n```"
+        ]
     },
     {
         "term": "vince,vic",
